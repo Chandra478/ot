@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('student');
-            $table->string('gender');
-            $table->string('class');
-            $table->boolean('is_approved')->default(false);
+        Schema::create('questions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('test_id')->constrained();
+            $table->text('question');
+            $table->json('options');
+            $table->string('correct_answer');
+            $table->timestamps();
         });
     }
 
@@ -24,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('questions');
     }
 };
