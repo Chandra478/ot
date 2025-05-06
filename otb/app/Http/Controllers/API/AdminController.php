@@ -52,4 +52,18 @@ class AdminController extends Controller
         $results = Result::with('user')->where('test_id', $testId)->get();
         return response()->json($results);
     }
+
+    public function getDashboardStats()
+    {
+        return response()->json([
+            'total_tests' => Test::count(),
+            'active_tests' => Test::where('start_time', '<=', now())
+                ->whereRaw("DATE_ADD(start_time, INTERVAL duration MINUTE) >= NOW()")
+                ->count(),
+            'completed_tests' => Test::whereRaw("DATE_ADD(start_time, INTERVAL duration MINUTE) < NOW()")
+                ->count(),
+            'total_students' => User::where('role', 'student')->count(),
+            'upcoming_tests' => Test::where('start_time', '>', now())->count()
+        ]);
+    }
 }

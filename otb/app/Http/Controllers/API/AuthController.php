@@ -30,9 +30,9 @@ class AuthController extends Controller
             'role' => 'student'
         ]);
 
-        Mail::to($user->email)->send(new RegistrationConfirmation($user));
+        // Mail::to($user->email)->send(new RegistrationConfirmation($user));
 
-        return response()->json(['message' => 'User registered successfully'], 201);
+        return response()->json(['success' => true, 'message' => 'User registered successfully'], 201);
     }
 
     public function login(Request $request)
@@ -49,5 +49,30 @@ class AuthController extends Controller
         }
 
         return response()->json(['message' => 'Invalid credentials'], 401);
+    }
+
+
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            $user = Auth::user();
+
+            if ($user->role === 'admin') {
+                return redirect()->intended('/admin/dashboard');
+            } else {
+                return redirect()->intended('/student/dashboard');
+            }
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
     }
 }
