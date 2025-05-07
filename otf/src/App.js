@@ -11,7 +11,7 @@ import PrivateRoute from './components/PrivateRoute';
 import QuestionManagement from './components/QuestionManagement'; // Ensure you have this component
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-
+import StudentsManagement from './components/StudentsManagement';
 function ProtectedRoute({ children, role }) {
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -35,46 +35,12 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route element={<PrivateRoute />}>
           <Route element={<Layout />}>
-            <Route
-              path="/admin/dashboard"
-              element={
-                <ProtectedRoute role="admin">
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/tests"
-              element={
-                <ProtectedRoute role="admin">
-                  <TestManagement />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin/tests/create"
-              element={
-                <ProtectedRoute role="admin">
-                  <CreateTest />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/tests/:testId/questions"
-              element={
-                <ProtectedRoute role="admin">
-                  <QuestionManagement />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/student/dashboard"
-              element={
-                <ProtectedRoute>
-                  <StudentDashboard />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/admin/dashboard" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/admin/tests" element={<ProtectedRoute role="admin"><TestManagement /></ProtectedRoute>} />
+            <Route path="/admin/students" element={<ProtectedRoute role="admin"><StudentsManagement /></ProtectedRoute>} />
+            <Route path="/admin/tests/create" element={<ProtectedRoute role="admin"><CreateTest /></ProtectedRoute>} />
+            <Route path="/tests/:testId/questions" element={<ProtectedRoute role="admin"><QuestionManagement /></ProtectedRoute>} />
+            <Route path="/student/dashboard" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
           </Route>
         </Route>
       </Routes>

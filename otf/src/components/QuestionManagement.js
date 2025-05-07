@@ -44,6 +44,7 @@ function QuestionManagement() {
     }, [testId]);
 
     const handleSubmit = async (e) => {
+        
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = {
@@ -65,6 +66,7 @@ function QuestionManagement() {
                     },
                 });
             } else {
+                data.correct_answer  = formData.get('option'+formData.get('correct_answer'));
                 await axios.post(`http://localhost:8000/api/tests/${testId}/questions`, data, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -228,7 +230,7 @@ function QuestionManagement() {
                                 {[1, 2, 3, 4].map(num => (
                                     <option 
                                         key={num} 
-                                        value={currentQuestion?.options?.[num-1] || ''}
+                                        value={currentQuestion?.options?.[num-1] || num}
                                     >
                                         Option {num}
                                     </option>

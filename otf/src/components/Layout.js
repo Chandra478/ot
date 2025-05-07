@@ -23,7 +23,7 @@ const Layout = () => {
       <Nav className="flex-column">
         {user?.role === 'admin' ? (
           <>
-            <Nav.Link as={Link} to="/admin">
+            <Nav.Link as={Link} to="/admin/dashboard">
               <FiHome className="me-2" /> Dashboard
             </Nav.Link>
             <Nav.Link as={Link} to="/admin/tests">

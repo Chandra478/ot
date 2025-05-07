@@ -45,7 +45,7 @@ function TestManagement() {
                                 </Badge>
                             </td>
                             <td>
-                                <Button as={Link} to={`/tests/${test.id}`} variant="info" size="sm">
+                                <Button as={Link} to={`/tests/${test.id}/questions`} variant="info" size="sm">
                                     Manage Questions
                                 </Button>
                             </td>

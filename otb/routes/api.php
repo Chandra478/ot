@@ -40,6 +40,15 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::apiResource('questions', QuestionController::class);
             Route::post('/generate-questions', [QuestionController::class, 'generate']);
         });
-        
+
+        });
+
+        Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+            // Student Management
+            Route::get('/admin/students', [AdminController::class, 'getStudents']);
+            Route::post('/admin/students', [AdminController::class, 'createStudent']);
+            Route::put('/admin/students/{user}', [AdminController::class, 'updateStudent']);
+            Route::delete('/admin/students/{user}', [AdminController::class, 'deleteStudent']);
+            Route::get('/admin/classes', [AdminController::class, 'getClasses']);
         });
 });

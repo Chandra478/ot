@@ -66,4 +66,74 @@ class AdminController extends Controller
             'upcoming_tests' => Test::where('start_time', '>', now())->count()
         ]);
     }
+
+
+    public function getStudents(Request $request)
+{
+    $query = User::where('role', 'student');
+
+    if ($request->has('class')) {
+        $query->where('class', $request->class);
+    }
+
+    if ($request->has('search')) {
+        $query->where(function($q) use ($request) {
+            $q->where('name', 'like', '%'.$request->search.'%')
+              ->orWhere('email', 'like', '%'.$request->search.'%');
+        });
+    }
+
+    return $query->paginate(10);
+}
+
+public function createStudent(Request $request)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users',
+        'gender' => 'required|in:male,female,other',
+        'class' => 'required|string',
+        'password' => 'required|string|min:8'
+    ]);
+
+    $student = User::create([
+        ...$validated,
+        'password' => bcrypt($validated['password']),
+        'role' => 'student',
+        'is_approved' => true
+    ]);
+
+    return response()->json($student, 201);
+}
+
+public function updateStudent(Request $request, User $user)
+{
+    $validated = $request->validate([
+        'name' => 'sometimes|string|max:255',
+        'email' => 'sometimes|email|unique:users,email,'.$user->id,
+        'gender' => 'sometimes|in:male,female,other',
+        'class' => 'sometimes|string',
+        'password' => 'nullable|string|min:8'
+    ]);
+
+    if (isset($validated['password'])) {
+        $validated['password'] = bcrypt($validated['password']);
+    }
+
+    $user->update($validated);
+    return response()->json($user);
+}
+
+public function deleteStudent(User $user)
+{
+    $user->delete();
+    return response()->noContent();
+}
+
+public function getClasses()
+{
+    return User::where('role', 'student')
+               ->distinct('class')
+               ->pluck('class');
+}
 }
