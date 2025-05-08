@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Button, Badge } from 'react-bootstrap';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../config/axios';
+
 
 function TestManagement() {
     const [tests, setTests] = useState([]);
@@ -9,7 +11,7 @@ function TestManagement() {
     useEffect(() => {
         const fetchTests = async () => {
             const token = localStorage.getItem('token');
-            const res = await axios.get('http://localhost:8000/api/tests', {
+            const res = await axios.get('/tests', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

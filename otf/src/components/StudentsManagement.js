@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Row, Col, Alert, Spinner, Badge, InputGroup } from 'react-bootstrap';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../config/axios';
+
+
+
 
 function StudentsManagement() {
     const [students, setStudents] = useState([]);
@@ -11,6 +15,8 @@ function StudentsManagement() {
     const [error, setError] = useState('');
     const [search, setSearch] = useState('');
     const [selectedClass, setSelectedClass] = useState('all');
+      const [pagination, setPagination] = useState({});
+        const [currentPage, setCurrentPage] = useState(1);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -22,7 +28,7 @@ function StudentsManagement() {
     useEffect(() => {
         fetchData();
         fetchClasses();
-    }, []);
+    }, [currentPage, selectedClass, search]);
 
     const fetchData = async () => {
         try {
@@ -31,12 +37,13 @@ function StudentsManagement() {
                 class: selectedClass === 'all' ? null : selectedClass
             };
             const token = localStorage.getItem('token');
-            const res = await axios.get('http://localhost:8000/api/admin/students', {
+            const res = await axios.get(`/admin/students?page=${currentPage}`, {
                 params,
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
+            setPagination(res.data);
             setStudents(res.data.data);
             setLoading(false);
         } catch (err) {
@@ -47,7 +54,7 @@ function StudentsManagement() {
 
     const fetchClasses = async () => {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:8000/api/admin/classes', {
+        const res = await axios.get('/admin/classes', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -60,14 +67,14 @@ function StudentsManagement() {
         try {
             if (currentStudent) {
                 const token = localStorage.getItem('token');
-                await axios.put(`http://localhost:8000/api/admin/students/${currentStudent.id}`, formData, {
+                await axios.put(`/admin/students/${currentStudent.id}`, formData, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
             } else {
                 const token = localStorage.getItem('token');
-                await axios.post('http://localhost:8000/api/admin/students', formData, {
+                await axios.post('/admin/students', formData, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -79,11 +86,22 @@ function StudentsManagement() {
             setError(err.response?.data?.message || 'Operation failed');
         }
     };
+    const goToNextPage = () => {
+        if (pagination.next_page_url) {
+          setCurrentPage((prev) => prev + 1);
+        }
+      };
+    
+      const goToPrevPage = () => {
+        if (pagination.prev_page_url) {
+          setCurrentPage((prev) => prev - 1);
+        }
+      };
 
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this student?')) {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:8000/api/admin/students/${id}`, {
+            await axios.delete(`/admin/students/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -157,7 +175,7 @@ function StudentsManagement() {
                                 <td>{student.email}</td>
                                 <td>{student.class}</td>
                                 <td>
-                                    <Badge bg="info">{student.gender}</Badge>
+                                    <Badge bg="info">{student.gender.charAt(0).toUpperCase() + student.gender.slice(1)}</Badge>
                                 </td>
                                 <td>
                                     <Button 
@@ -189,7 +207,25 @@ function StudentsManagement() {
                     </tbody>
                 </Table>
             )}
-
+                <nav aria-label="Page navigation example">
+                    <ul className="pagination">
+                        <li className="page-item">
+                            <Button variant="light" onClick={goToPrevPage} disabled={!pagination.prev_page_url}>
+                                Previous
+                            </Button>
+                        </li>
+                        <li className="page-item active">
+                            <span className="page-link">
+                                Page {pagination.current_page}
+                            </span>
+                        </li>
+                        <li className="page-item">
+                            <Button variant="light" onClick={goToNextPage} disabled={!pagination.next_page_url}>
+                                Next
+                            </Button>
+                        </li>
+                    </ul>
+                </nav>      
             {/* Add/Edit Modal */}
             <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
                 <Modal.Header closeButton>

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Table, Button, Modal, Form, Row, Col, Alert, Spinner, Badge } from 'react-bootstrap';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../config/axios';
+
 import { toast } from 'react-hot-toast';
 function QuestionManagement() {
     const { testId } = useParams();
@@ -23,12 +25,12 @@ function QuestionManagement() {
             try {
                 const token = localStorage.getItem('token');
                 const [testRes, questionsRes] = await Promise.all([
-                    axios.get(`http://localhost:8000/api/tests/${testId}`, {
+                    axios.get(`/tests/${testId}`, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     }),
-                    axios.get(`http://localhost:8000/api/tests/${testId}/questions?page=${currentPage}`, {
+                    axios.get(`/tests/${testId}/questions?page=${currentPage}`, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -75,14 +77,14 @@ function QuestionManagement() {
 
         try {
             if (currentQuestion) {
-                await axios.put(`http://localhost:8000/api/tests/${testId}/questions/${currentQuestion.id}`, data, {
+                await axios.put(`/tests/${testId}/questions/${currentQuestion.id}`, data, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
             } else {
                 data.correct_answer  = formData.get('option'+formData.get('correct_answer'));
-                await axios.post(`http://localhost:8000/api/tests/${testId}/questions`, data, {
+                await axios.post(`/tests/${testId}/questions`, data, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
@@ -97,7 +99,7 @@ function QuestionManagement() {
 
     const handleGenerate = async () => {
         try {
-            await axios.post(`http://localhost:8000/api/tests/${testId}/generate-questions`, { topic, difficulty ,testId}, {
+            await axios.post(`/tests/${testId}/generate-questions`, { topic, difficulty ,testId}, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -118,7 +120,7 @@ function QuestionManagement() {
 
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this question?')) {
-            await axios.delete(`http://localhost:8000/api/tests/${testId}/questions/${id}`, {
+            await axios.delete(`/tests/${testId}/questions/${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -128,7 +130,7 @@ function QuestionManagement() {
     };
 
     const refreshQuestions = async () => {
-        const res = await axios.get(`http://localhost:8000/api/tests/${testId}/questions`, {
+        const res = await axios.get(`/tests/${testId}/questions`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             },

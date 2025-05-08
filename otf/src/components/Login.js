@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Form, Button, Alert, Container, Card, Row, Col } from 'react-bootstrap';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../config/axios';
+
 
 function Login() {
   const [email, setEmail] = useState('admin@');
@@ -21,7 +23,7 @@ function Login() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/api/login', {
+      const response = await axios.post('/login', {
         email,
         password
       });
