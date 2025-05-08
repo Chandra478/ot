@@ -15,6 +15,8 @@ function QuestionManagement() {
     const [error, setError] = useState('');
     const [topic, setTopic] = useState('');
     const [difficulty, setDifficulty] = useState('easy');
+    const [pagination, setPagination] = useState({});
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,7 +28,7 @@ function QuestionManagement() {
                             Authorization: `Bearer ${token}`,
                         },
                     }),
-                    axios.get(`http://localhost:8000/api/tests/${testId}/questions`, {
+                    axios.get(`http://localhost:8000/api/tests/${testId}/questions?page=${currentPage}`, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -34,6 +36,8 @@ function QuestionManagement() {
                 ]);
                 setTest(testRes.data);
                 setQuestions(questionsRes.data.data);
+                setPagination(questionsRes.data);
+                console.log(questionsRes.data)
                 setLoading(false);
             } catch (err) {
                 setError(err.response?.data?.message || 'Failed to load data');
@@ -41,8 +45,19 @@ function QuestionManagement() {
             }
         };
         fetchData();
-    }, [testId]);
+    }, [testId, currentPage]);
 
+    const goToNextPage = () => {
+        if (pagination.next_page_url) {
+          setCurrentPage((prev) => prev + 1);
+        }
+      };
+    
+      const goToPrevPage = () => {
+        if (pagination.prev_page_url) {
+          setCurrentPage((prev) => prev - 1);
+        }
+      };
     const handleSubmit = async (e) => {
         
         e.preventDefault();
@@ -192,7 +207,25 @@ function QuestionManagement() {
                     ))}
                 </tbody>
             </Table>
-
+                <nav aria-label="Page navigation example">
+                    <ul className="pagination">
+                        <li className="page-item">
+                            <Button variant="light" onClick={goToPrevPage} disabled={!pagination.prev_page_url}>
+                                Previous
+                            </Button>
+                        </li>
+                        <li className="page-item active">
+                            <span className="page-link">
+                                Page {pagination.current_page}
+                            </span>
+                        </li>
+                        <li className="page-item">
+                            <Button variant="light" onClick={goToNextPage} disabled={!pagination.next_page_url}>
+                                Next
+                            </Button>
+                        </li>
+                    </ul>
+                </nav>
             {/* Add/Edit Question Modal */}
             <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
                 <Modal.Header closeButton>
