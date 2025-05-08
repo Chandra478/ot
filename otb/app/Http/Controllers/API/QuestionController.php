@@ -16,7 +16,7 @@ class QuestionController extends Controller
 
     public function __construct()
     {
-        $this->openRouteApiKey = "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";//env('OPENROUTE_API_KEY');
+        $this->openRouteApiKey = "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";//env('OPENROUTE_API_KEY');
         $this->client = new Client([
             'base_uri' => 'https://openrouter.ai/api/v1/',
             'headers' => [
@@ -103,7 +103,7 @@ class QuestionController extends Controller
             Log::error('Question generation failed: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to generate question. Please try again.'
+                'message' => 'Failed to generate question. Please try again.'.$e->getMessage()
             ], 500);
         }
     }
