@@ -5,10 +5,26 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Test;
+use GuzzleHttp\Client;
 use App\Models\Question;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 class QuestionController extends Controller
 {
+    protected $openRouteApiKey;
+    protected $client;
+
+    public function __construct()
+    {
+        $this->openRouteApiKey = "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";//env('OPENROUTE_API_KEY');
+        $this->client = new Client([
+            'base_uri' => 'https://openrouter.ai/api/v1/',
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->openRouteApiKey,
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+    }
     public function index(Test $test)
     {
         return $test->questions()->paginate(10);
@@ -43,32 +59,96 @@ class QuestionController extends Controller
         return response()->noContent();
     }
 
-    public function generate(Test $test, Request $request)
+    public function generate(Request $request)
     {
         $request->validate([
-            'topic' => 'required|string',
-            'count' => 'required|integer|min:1|max:20'
+            'topic' => 'required|string|max:255',
+            'difficulty' => 'sometimes|string|in:easy,medium,hard',
         ]);
 
-        $response = Http::withToken(config('services.openai.key'))
-            ->post('https://api.openai.com/v1/chat/completions', [
-                'model' => 'gpt-3.5-turbo',
-                'messages' => [[
-                    'role' => 'user',
-                    'content' => "Generate {$request->count} multiple choice questions about {$request->topic}. Each should have 4 options with 1 correct answer. Format as JSON: {questions: [{question: '', options: [], correct_answer: ''}]}"
-                ]]
+        $topic = $request->input('topic');
+        $difficulty = $request->input('difficulty', 'medium');
+        $testId = $request->input('testId');
+        try {
+            $prompt = $this->buildPrompt($topic, $difficulty);
+            
+            $response = $this->client->post('chat/completions', [
+                'json' => [
+                    'model' => 'mistralai/mistral-7b-instruct:free',
+                    'messages' => [
+                        ['role' => 'user', 'content' => $prompt]
+                    ],
+                    'temperature' => 0.7,
+                ]
             ]);
 
-        $questions = json_decode($response->json('choices.0.message.content'), true)['questions'];
+            $responseData = json_decode($response->getBody(), true);
+            $generatedContent = $responseData['choices'][0]['message']['content'] ?? '';
 
-        foreach ($questions as $q) {
-            $test->questions()->create([
-                'question' => $q['question'],
-                'options' => $q['options'],
-                'correct_answer' => $q['correct_answer']
+            // Parse the response into a structured format
+            $questionData = $this->parseGeneratedContent($generatedContent);
+            $question = Question::create([
+                'test_id' => $testId,
+                'question' => $questionData['question'],
+                'options' => $questionData['options'],
+                'correct_answer' => $questionData['correct_answer']
             ]);
+
+            return response()->json([
+                'success' => true,
+                'question' => $questionData
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Question generation failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to generate question. Please try again.'
+            ], 500);
         }
+    }
 
-        return response()->json(['message' => 'Questions generated successfully']);
+    protected function buildPrompt($topic, $difficulty)
+    {
+        return <<<PROMPT
+    Generate a multiple-choice question about {$topic} with 4 options and indicate the correct answer.
+    The question should be of {$difficulty} difficulty.
+
+    Format your response exactly like this example:
+
+    Question: What is the capital of France?
+    A. London
+    B. Berlin
+    C. Paris
+    D. Madrid
+    Correct Answer: C
+
+    Now generate a question about {$topic}:
+    PROMPT;
+    }
+
+    protected function parseGeneratedContent($content)
+    {
+        $question = '';
+        $options = [];
+        $correctAnswer = '';
+        
+        $lines = explode("\n", trim($content));
+        
+        foreach ($lines as $line) {
+            if (str_starts_with($line, 'Question:')) {
+                $question = trim(substr($line, 9));
+            } elseif (preg_match('/^[A-D]\./', $line)) {
+                $options[] = trim(substr($line, 3));
+            } elseif (str_starts_with($line, 'Correct Answer:')) {
+                $correctAnswer = trim(substr($line, 15));
+            }
+        }
+        
+        return [
+            'question' => $question,
+            'options' => $options,
+            'correct_answer' => $options[ord($correctAnswer) - 65]
+        ];
     }
 }

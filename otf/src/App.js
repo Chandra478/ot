@@ -8,10 +8,11 @@ import AdminDashboard from './components/AdminDashboard';
 import TestManagement from './components/TestManagement';
 import CreateTest from './components/CreateTest';
 import PrivateRoute from './components/PrivateRoute';
-import QuestionManagement from './components/QuestionManagement'; // Ensure you have this component
+import QuestionManagement from './components/QuestionManagement';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import StudentsManagement from './components/StudentsManagement';
+import { Toaster } from 'react-hot-toast';
 function ProtectedRoute({ children, role }) {
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -29,6 +30,7 @@ function ProtectedRoute({ children, role }) {
 function App() {
   return (
     <BrowserRouter>
+      <Toaster />
       <Routes>
         <Route index element={<Login />} />
         <Route path="login" element={<Login />} />

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Table, Button, Modal, Form, Row, Col, Alert, Spinner, Badge } from 'react-bootstrap';
 import axios from 'axios';
-
+import { toast } from 'react-hot-toast';
 function QuestionManagement() {
     const { testId } = useParams();
     const navigate = useNavigate();
@@ -14,7 +14,7 @@ function QuestionManagement() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [topic, setTopic] = useState('');
-    const [count, setCount] = useState(5);
+    const [difficulty, setDifficulty] = useState('easy');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -82,12 +82,19 @@ function QuestionManagement() {
 
     const handleGenerate = async () => {
         try {
-            await axios.post(`http://localhost:8000/api/tests/${testId}/generate-questions`, { topic, count }, {
+            await axios.post(`http://localhost:8000/api/tests/${testId}/generate-questions`, { topic, difficulty ,testId}, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
+            
+            toast.success('Questions generated successfully', {
+                position: 'top-center',
+                duration: 3000,
+              });
+              
             setShowGenerateModal(false);
+            
             refreshQuestions();
         } catch (err) {
             setError(err.response?.data?.message || 'Generation failed');
@@ -115,10 +122,11 @@ function QuestionManagement() {
     };
 
     if (loading) return <Spinner animation="border" />;
-    if (error) return <Alert variant="danger">{error}</Alert>;
+    // if (error) return <Alert variant="danger">{error}</Alert>;
 
     return (
         <Container className="py-4">
+            {error && <Alert variant="danger">{error}</Alert>}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>
                     Questions for: {test?.title}
@@ -264,11 +272,11 @@ function QuestionManagement() {
                         <Form.Group className="mb-3">
                             <Form.Label>Number of Questions</Form.Label>
                             <Form.Control
-                                type="number"
+                                type="text"
                                 min="1"
                                 max="20"
-                                value={count}
-                                onChange={(e) => setCount(e.target.value)}
+                                value={difficulty}
+                                onChange={(e) => setDifficulty(e.target.value)}
                                 required
                             />
                         </Form.Group>
