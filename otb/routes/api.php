@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\AdminController;
 use App\Http\Controllers\API\TestController;
 use App\Http\Controllers\API\QuestionController;
+use App\Http\Controllers\API\StudentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -50,5 +51,16 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('/admin/students/{user}', [AdminController::class, 'updateStudent']);
             Route::delete('/admin/students/{user}', [AdminController::class, 'deleteStudent']);
             Route::get('/admin/classes', [AdminController::class, 'getClasses']);
+        });
+
+
+
+        Route::middleware(['auth:sanctum', 'student'])->group(function () {
+            Route::get('/student/dashboard', [StudentController::class, 'dashboard']);
+            Route::get('/student/tests', [StudentController::class, 'getTests']);
+            Route::get('/student/upcoming-tests', [StudentController::class, 'getUpcomingTests']);
+            Route::get('/student/tests/{test}', [TestController::class, 'show']);
+            Route::get('/tests/{test}', [TestController::class, 'getTestDetails']);
+            Route::post('/tests/{test}/submit', [TestController::class, 'submitTest']);
         });
 });

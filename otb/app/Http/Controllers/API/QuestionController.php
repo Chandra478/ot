@@ -71,7 +71,7 @@ class QuestionController extends Controller
         $testId = $request->input('testId');
         try {
             $prompt = $this->buildPrompt($topic, $difficulty);
-            
+
             $response = $this->client->post('chat/completions', [
                 'json' => [
                     'model' => 'mistralai/mistral-7b-instruct:free',
@@ -132,9 +132,9 @@ class QuestionController extends Controller
         $question = '';
         $options = [];
         $correctAnswer = '';
-        
+
         $lines = explode("\n", trim($content));
-        
+
         foreach ($lines as $line) {
             if (str_starts_with($line, 'Question:')) {
                 $question = trim(substr($line, 9));
@@ -144,11 +144,11 @@ class QuestionController extends Controller
                 $correctAnswer = trim(substr($line, 15));
             }
         }
-        
+
         return [
             'question' => $question,
             'options' => $options,
-            'correct_answer' => $options[ord($correctAnswer) - 65]
+            'correct_answer' => $correctAnswer//$options[ord($correctAnswer) - 65]
         ];
     }
 }

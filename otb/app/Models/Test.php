@@ -25,12 +25,19 @@ class Test extends Model
         'start_time' => 'datetime',
     ];
 
-    public function questions()
-    {
-        return $this->hasMany(Question::class);
-    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+    public function results()
+    {
+        return $this->hasMany(Result::class);
+    }
+    public function questions()
+{
+    return $this->hasMany(Question::class);
+}
+
+
 }

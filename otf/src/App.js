@@ -13,6 +13,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import StudentsManagement from './components/StudentsManagement';
 import { Toaster } from 'react-hot-toast';
+import UpcomingTests from './components/UpcomingTests';
+import TestInfo from './components/TestInfo';
+import TestInterface from './components/TestInterface';
 function ProtectedRoute({ children, role }) {
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -42,7 +45,10 @@ function App() {
             <Route path="/admin/students" element={<ProtectedRoute role="admin"><StudentsManagement /></ProtectedRoute>} />
             <Route path="/admin/tests/create" element={<ProtectedRoute role="admin"><CreateTest /></ProtectedRoute>} />
             <Route path="/tests/:testId/questions" element={<ProtectedRoute role="admin"><QuestionManagement /></ProtectedRoute>} />
-            <Route path="/student/dashboard" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
+            <Route path="/student/dashboard" element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>} />
+            <Route path="/student/upcoming-tests" element={<ProtectedRoute role="student"><UpcomingTests /></ProtectedRoute>} />
+            <Route path="/test-info/:testId" element={<ProtectedRoute><TestInfo /></ProtectedRoute>} />
+            <Route path="/test/:testId" element={<ProtectedRoute role="student"><TestInterface /></ProtectedRoute>} />
           </Route>
         </Route>
       </Routes>

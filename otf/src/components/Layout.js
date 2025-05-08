@@ -66,7 +66,7 @@ const Layout = () => {
                 </>
               ) : (
                 <>
-                  <Nav.Link as={Link} to="/student" className="mb-2 rounded">
+                  <Nav.Link as={Link} to="/student/dashboard" className="mb-2 rounded">
                     <FiHome className="me-2" /> Dashboard
                   </Nav.Link>
                   <Nav.Link as={Link} to="/student/upcoming-tests" className="mb-2 rounded">
