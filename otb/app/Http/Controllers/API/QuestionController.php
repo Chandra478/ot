@@ -16,7 +16,7 @@ class QuestionController extends Controller
 
     public function __construct()
     {
-        $this->openRouteApiKey = "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";//env('OPENROUTE_API_KEY');
+        $this->openRouteApiKey = env('OPENROUTE_API_KEY');
         $this->client = new Client([
             'base_uri' => 'https://openrouter.ai/api/v1/',
             'headers' => [
