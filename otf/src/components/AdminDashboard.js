@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Spinner } from 'react-bootstrap';
-import axios from 'axios';
+import axios from '../config/axios'; // Adjust the import path as necessary
 
 function Dashboard() {
     const [stats, setStats] = useState(null);
@@ -10,7 +10,7 @@ function Dashboard() {
         const fetchStats = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const res = await axios.get('http://localhost:8000/api/admin/dashboard-stats', {
+                const res = await axios.get('/admin/dashboard-stats', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

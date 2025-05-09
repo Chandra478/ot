@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
-import axios from 'axios';
+import axios from '../config/axios'; // Adjust the import path as necessary
 
 function CreateTest() {
     const navigate = useNavigate();
@@ -29,7 +29,7 @@ function CreateTest() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.post('http://localhost:8000/api/tests', formData, {
+            const response = await axios.post('/tests', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
