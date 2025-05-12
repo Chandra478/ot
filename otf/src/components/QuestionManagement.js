@@ -81,6 +81,7 @@ function QuestionManagement() {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
+                toast.success('Question updated successfully!');
             } else {
                 data.correct_answer = formData.get('option' + formData.get('correct_answer'));
                 await axios.post(`/tests/${testId}/questions`, data, {
@@ -88,11 +89,13 @@ function QuestionManagement() {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
+                toast.success('Question added successfully!');
             }
             setShowModal(false);
             refreshQuestions();
         } catch (err) {
             setError(err.response?.data?.message || 'Operation failed');
+            toast.error('Operation failed');
         }
     };
 
@@ -112,6 +115,7 @@ function QuestionManagement() {
             refreshQuestions();
         } catch (err) {
             setError(err.response?.data?.message || 'Generation failed');
+            toast.error('Generation failed');
         } finally {
             setGenerating(false);
         }
@@ -119,12 +123,19 @@ function QuestionManagement() {
 
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this question?')) {
-            await axios.delete(`/tests/${testId}/questions/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            refreshQuestions();
+            try {
+                await axios.delete(`/tests/${testId}/questions/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+                toast.success('Question deleted successfully!', {
+                    position: 'top-right',
+                });
+                refreshQuestions();
+            } catch (err) {
+                toast.error(err.response?.data?.message || 'Failed to delete question');
+            }
         }
     };
 
@@ -324,3 +335,4 @@ function QuestionManagement() {
 }
 
 export default QuestionManagement;
+

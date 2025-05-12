@@ -116,8 +116,7 @@ public function updateStudent(Request $request, User $user)
         // 'password' => 'nullable|string|min:8'
     ]);
 
-    if ($request->has('password')) {
-        echo  'hi';
+    if ($request->has('password') && $request->password != '') {
         $validated['password'] = bcrypt($request->validate(['password' => 'string|min:8'])['password']);
     }
 

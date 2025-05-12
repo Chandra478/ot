@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import axios from '../config/axios'; // Adjust the import path as necessary
+import { toast } from 'react-hot-toast';
 
 function CreateTest() {
     const navigate = useNavigate();
@@ -34,9 +35,11 @@ function CreateTest() {
                     Authorization: `Bearer ${token}`,
                 },
             });
+            toast.success('Test created successfully!');
             navigate(`/tests/${response.data.id}/questions`);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to create test');
+            toast.error('Failed to create test');
         } finally {
             setIsSubmitting(false);
         }

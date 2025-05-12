@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Row, Col, Alert, Spinner, Badge, InputGroup } from 'react-bootstrap';
 // import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 import axios from '../config/axios';
 
 
@@ -72,6 +73,7 @@ function StudentsManagement() {
                         Authorization: `Bearer ${token}`
                     }
                 });
+                toast.success('Student updated successfully');
             } else {
                 const token = localStorage.getItem('token');
                 await axios.post('/admin/students', formData, {
@@ -79,6 +81,7 @@ function StudentsManagement() {
                         Authorization: `Bearer ${token}`
                     }
                 });
+                toast.success('Student created successfully');
             }
             setShowModal(false);
             fetchData();
@@ -106,6 +109,7 @@ function StudentsManagement() {
                     Authorization: `Bearer ${token}`
                 }
             });
+            toast.success('Student deleted successfully');
             fetchData();
         }
     };
