@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/tests/{test}', [TestController::class, 'getTestDetails']);
             Route::post('/tests/{test}/submit', [TestController::class, 'submitTest']);
             Route::get('/student/results/{result}', [ResultController::class, 'showResult']);
+            Route::get('/student/results', [ResultController::class, 'studentResults']);
         });
 });
 
