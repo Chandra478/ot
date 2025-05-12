@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Table, Button, Modal, Form, Row, Col, Alert, Spinner, Badge } from 'react-bootstrap';
-// import axios from 'axios';
 import axios from '../config/axios';
-
 import { toast } from 'react-hot-toast';
+
 function QuestionManagement() {
     const { testId } = useParams();
     const navigate = useNavigate();
@@ -14,6 +13,7 @@ function QuestionManagement() {
     const [showGenerateModal, setShowGenerateModal] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [generating, setGenerating] = useState(false);
     const [error, setError] = useState('');
     const [topic, setTopic] = useState('');
     const [difficulty, setDifficulty] = useState('easy');
@@ -25,7 +25,7 @@ function QuestionManagement() {
             try {
                 const token = localStorage.getItem('token');
                 const [testRes, questionsRes] = await Promise.all([
-                    axios.get(`/tests/${testId}`, {
+                    axios.get(`admin/tests/${testId}`, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -39,7 +39,6 @@ function QuestionManagement() {
                 setTest(testRes.data);
                 setQuestions(questionsRes.data.data);
                 setPagination(questionsRes.data);
-                console.log(questionsRes.data)
                 setLoading(false);
             } catch (err) {
                 setError(err.response?.data?.message || 'Failed to load data');
@@ -51,17 +50,17 @@ function QuestionManagement() {
 
     const goToNextPage = () => {
         if (pagination.next_page_url) {
-          setCurrentPage((prev) => prev + 1);
+            setCurrentPage((prev) => prev + 1);
         }
-      };
-    
-      const goToPrevPage = () => {
+    };
+
+    const goToPrevPage = () => {
         if (pagination.prev_page_url) {
-          setCurrentPage((prev) => prev - 1);
+            setCurrentPage((prev) => prev - 1);
         }
-      };
+    };
+
     const handleSubmit = async (e) => {
-        
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = {
@@ -83,7 +82,7 @@ function QuestionManagement() {
                     },
                 });
             } else {
-                data.correct_answer  = formData.get('option'+formData.get('correct_answer'));
+                data.correct_answer = formData.get('option' + formData.get('correct_answer'));
                 await axios.post(`/tests/${testId}/questions`, data, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -98,23 +97,23 @@ function QuestionManagement() {
     };
 
     const handleGenerate = async () => {
+        setGenerating(true);
         try {
-            await axios.post(`/tests/${testId}/generate-questions`, { topic, difficulty ,testId}, {
+            await axios.post(`/tests/${testId}/generate-questions`, { topic, difficulty, testId }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-            
             toast.success('Questions generated successfully', {
                 position: 'top-center',
                 duration: 3000,
-              });
-              
+            });
             setShowGenerateModal(false);
-            
             refreshQuestions();
         } catch (err) {
             setError(err.response?.data?.message || 'Generation failed');
+        } finally {
+            setGenerating(false);
         }
     };
 
@@ -139,7 +138,6 @@ function QuestionManagement() {
     };
 
     if (loading) return <Spinner animation="border" />;
-    // if (error) return <Alert variant="danger">{error}</Alert>;
 
     return (
         <Container className="py-4">
@@ -186,9 +184,9 @@ function QuestionManagement() {
                             </td>
                             <td>{q.correct_answer}</td>
                             <td>
-                                <Button 
-                                    variant="info" 
-                                    size="sm" 
+                                <Button
+                                    variant="info"
+                                    size="sm"
                                     onClick={() => {
                                         setCurrentQuestion(q);
                                         setShowModal(true);
@@ -197,8 +195,8 @@ function QuestionManagement() {
                                 >
                                     Edit
                                 </Button>
-                                <Button 
-                                    variant="danger" 
+                                <Button
+                                    variant="danger"
                                     size="sm"
                                     onClick={() => handleDelete(q.id)}
                                 >
@@ -209,25 +207,25 @@ function QuestionManagement() {
                     ))}
                 </tbody>
             </Table>
-                <nav aria-label="Page navigation example">
-                    <ul className="pagination">
-                        <li className="page-item">
-                            <Button variant="light" onClick={goToPrevPage} disabled={!pagination.prev_page_url}>
-                                Previous
-                            </Button>
-                        </li>
-                        <li className="page-item active">
-                            <span className="page-link">
-                                Page {pagination.current_page}
-                            </span>
-                        </li>
-                        <li className="page-item">
-                            <Button variant="light" onClick={goToNextPage} disabled={!pagination.next_page_url}>
-                                Next
-                            </Button>
-                        </li>
-                    </ul>
-                </nav>
+            <nav aria-label="Page navigation example">
+                <ul className="pagination">
+                    <li className="page-item">
+                        <Button variant="light" onClick={goToPrevPage} disabled={!pagination.prev_page_url}>
+                            Previous
+                        </Button>
+                    </li>
+                    <li className="page-item active">
+                        <span className="page-link">
+                            Page {pagination.current_page}
+                        </span>
+                    </li>
+                    <li className="page-item">
+                        <Button variant="light" onClick={goToNextPage} disabled={!pagination.next_page_url}>
+                            Next
+                        </Button>
+                    </li>
+                </ul>
+            </nav>
             {/* Add/Edit Question Modal */}
             <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
                 <Modal.Header closeButton>
@@ -254,7 +252,7 @@ function QuestionManagement() {
                                         <Form.Control
                                             type="text"
                                             name={`option${num}`}
-                                            defaultValue={currentQuestion?.options?.[num-1] || ''}
+                                            defaultValue={currentQuestion?.options?.[num - 1] || ''}
                                             required
                                         />
                                     </Form.Group>
@@ -271,9 +269,9 @@ function QuestionManagement() {
                             >
                                 <option value="">Select correct answer</option>
                                 {[1, 2, 3, 4].map(num => (
-                                    <option 
-                                        key={num} 
-                                        value={currentQuestion?.options?.[num-1] || num}
+                                    <option
+                                        key={num}
+                                        value={currentQuestion?.options?.[num - 1] || num}
                                     >
                                         Option {num}
                                     </option>
@@ -315,8 +313,8 @@ function QuestionManagement() {
                                 required
                             />
                         </Form.Group>
-                        <Button variant="success" onClick={handleGenerate}>
-                            Generate
+                        <Button variant="success" onClick={handleGenerate} disabled={generating}>
+                            {generating ? <Spinner animation="border" size="sm" /> : 'Generate'}
                         </Button>
                     </Form>
                 </Modal.Body>

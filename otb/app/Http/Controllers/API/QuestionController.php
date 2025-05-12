@@ -27,7 +27,7 @@ class QuestionController extends Controller
     }
     public function index(Test $test)
     {
-        return $test->questions()->paginate(10);
+        return $test->questions()->orderByDesc('id')->paginate(10);
     }
 
     public function store(Request $request, Test $test)
@@ -148,7 +148,8 @@ class QuestionController extends Controller
         return [
             'question' => $question,
             'options' => $options,
-            'correct_answer' => $correctAnswer//$options[ord($correctAnswer) - 65]
+            'correct_answer' => $options[ord($correctAnswer) - 65]
+            // 'correct_answer' => $correctAnswer
         ];
     }
 }

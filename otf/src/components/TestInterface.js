@@ -32,7 +32,7 @@ function TestInterface() {
         });
         
         if (response.data.has_attempted) {
-          navigate(`/results/${testId}`);
+          navigate(`student/results/${testId}`);
           return;
         }
 
@@ -87,7 +87,7 @@ function TestInterface() {
         { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
 
-      navigate(`/results/${response.data.result_id}`);
+      navigate(`student/results/${response.data.result_id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Submission failed');
       setSubmitting(false);
@@ -106,7 +106,7 @@ function TestInterface() {
     return (
       <Container className="mt-5">
         <Alert variant="danger">{error}</Alert>
-        <Button onClick={() => navigate('/dashboard')}>Back to Dashboard</Button>
+        <Button onClick={() => navigate('student/dashboard')}>Back to Dashboard</Button>
       </Container>
     );
   }

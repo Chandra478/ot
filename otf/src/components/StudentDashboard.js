@@ -31,6 +31,7 @@ function StudentDashboard() {
     const getTestStatus = (test) => {
         const now = new Date();
         const start = new Date(test.start_time);
+        console.log(test.start_time,start)
         const end = new Date(start.getTime() + test.duration * 60000);
         
         if (now < start) return 'upcoming';

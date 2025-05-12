@@ -6,10 +6,10 @@ export function formatUTCDate(dateString) {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: 'UTC'
+      timeZone: 'Asia/Kolkata'
     };
     return new Date(dateString).toLocaleString('en-US', options);
-  }
+}
   
   export function getUTCTimeRemaining(seconds) {
     if (seconds <= 0) return '00:00:00';

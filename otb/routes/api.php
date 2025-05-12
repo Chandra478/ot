@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Admin routes
     Route::middleware('admin')->group(function () {
+        Route::get('/admin/tests/{test}', [AdminController::class, 'getTestDetails']);
         Route::post('/create-test', [AdminController::class, 'createTest']);
         Route::post('/generate-questions', [AdminController::class, 'generateQuestions']);
         Route::get('/test-results/{testId}', [AdminController::class, 'getResults']);

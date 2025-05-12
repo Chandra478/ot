@@ -17,7 +17,9 @@ class TestController extends Controller
 {
     public function index()
     {
+        
         return Test::withCount('questions')->paginate(10);
+
     }
 
     public function store(Request $request)

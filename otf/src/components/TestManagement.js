@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Table, Button, Badge } from 'react-bootstrap';
 // import axios from 'axios';
 import axios from '../config/axios';
+import { formatUTCDate, formatUTCTime } from '../utils/timeUtils';
 
 
 function TestManagement() {
@@ -31,6 +32,8 @@ function TestManagement() {
                         <th>Title</th>
                         <th>Class</th>
                         <th>Questions</th>
+                        <th>Start Time</th>
+                        <th>Duration</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -41,6 +44,8 @@ function TestManagement() {
                             <td>{test.title}</td>
                             <td>{test.class}</td>
                             <td>{test.questions_count}</td>
+                            <td>{formatUTCDate(test.start_time)} </td>
+                            <td>{test.duration} minutes</td>
                             <td>
                                 <Badge bg={new Date(test.start_time) > new Date() ? 'warning' : 'success'}>
                                     {new Date(test.start_time) > new Date() ? 'Upcoming' : 'Active'}

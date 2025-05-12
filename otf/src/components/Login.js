@@ -6,9 +6,9 @@ import axios from '../config/axios';
 
 
 function Login() {
-  const [email, setEmail] = useState('admin@');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('Invalid credentials');
+  const [error, setError] = useState('');
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
 
@@ -40,6 +40,16 @@ function Login() {
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid credentials');
     }
+  };
+
+  const handleAdminClick = () => {
+    setEmail('admin@test.com');
+    setPassword('password');
+  };
+
+  const handleStudentClick = () => {
+    setEmail('student@test.com');
+    setPassword('student123');
   };
 
   return (
@@ -103,6 +113,15 @@ function Login() {
                   <Link to="/register" className="text-decoration-none">
                     Register here
                   </Link>
+                </div>
+
+                <div className="text-center mt-4">
+                  <Button variant="secondary" onClick={handleAdminClick} className="me-2">
+                    Admin
+                  </Button>
+                  <Button variant="secondary" onClick={handleStudentClick}>
+                    Student
+                  </Button>
                 </div>
               </Form>
             </Card.Body>

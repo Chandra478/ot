@@ -82,10 +82,10 @@ function TestInfo() {
     );
   }
 
-  const testStartTime = new Date(test.start_time);
+  const testStartTime = new Date((test.start_time));
   const testEndTime = new Date(testStartTime.getTime() + test.duration * 60000);
   const currentUTCTime = new Date().toISOString();
-  const isTestActive = currentUTCTime >= test.start_time && currentUTCTime <= testEndTime.toISOString();
+  const isTestActive = currentUTCTime >= (test.start_time) && currentUTCTime <= testEndTime.toISOString();
   const isTestCompleted = currentUTCTime > testEndTime.toISOString();
 
   return (
@@ -131,7 +131,7 @@ function TestInfo() {
               <strong>Duration:</strong> {test.duration} minutes
             </ListGroup.Item>
             <ListGroup.Item>
-              <strong>Total Questions:</strong> {test.questions_count}
+              <strong>Total Questions:</strong> {test.questions?.length}
             </ListGroup.Item>
             {test.description && (
               <ListGroup.Item>

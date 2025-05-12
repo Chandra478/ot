@@ -113,11 +113,12 @@ public function updateStudent(Request $request, User $user)
         'email' => 'sometimes|email|unique:users,email,'.$user->id,
         'gender' => 'sometimes|in:male,female,other',
         'class' => 'sometimes|string',
-        'password' => 'nullable|string|min:8'
+        // 'password' => 'nullable|string|min:8'
     ]);
 
-    if (isset($validated['password'])) {
-        $validated['password'] = bcrypt($validated['password']);
+    if ($request->has('password')) {
+        echo  'hi';
+        $validated['password'] = bcrypt($request->validate(['password' => 'string|min:8'])['password']);
     }
 
     $user->update($validated);
@@ -135,5 +136,11 @@ public function getClasses()
     return User::where('role', 'student')
                ->distinct('class')
                ->pluck('class');
+}
+
+public function getTestDetails($testId)
+{
+    $test = Test::with('questions')->findOrFail($testId);
+    return response()->json($test);
 }
 }
