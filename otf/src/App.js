@@ -16,6 +16,7 @@ import { Toaster } from 'react-hot-toast';
 import UpcomingTests from './components/UpcomingTests';
 import TestInfo from './components/TestInfo';
 import TestInterface from './components/TestInterface';
+import ResultPage from './components/ResultPage';
 function ProtectedRoute({ children, role }) {
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -49,6 +50,7 @@ function App() {
             <Route path="/student/upcoming-tests" element={<ProtectedRoute role="student"><UpcomingTests /></ProtectedRoute>} />
             <Route path="/test-info/:testId" element={<ProtectedRoute><TestInfo /></ProtectedRoute>} />
             <Route path="/test/:testId" element={<ProtectedRoute role="student"><TestInterface /></ProtectedRoute>} />
+            <Route path="student/results/:resultId" element={<ProtectedRoute role="student"><ResultPage /></ProtectedRoute>} />
           </Route>
         </Route>
       </Routes>

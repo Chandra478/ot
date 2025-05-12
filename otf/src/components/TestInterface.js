@@ -32,7 +32,7 @@ function TestInterface() {
         });
         
         if (response.data.has_attempted) {
-          navigate(`student/results/${testId}`);
+          navigate(`/student/results/${response.data.result_id}`);
           return;
         }
 
@@ -87,7 +87,7 @@ function TestInterface() {
         { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
 
-      navigate(`student/results/${response.data.result_id}`);
+      navigate(`/student/results/${response.data.result_id}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Submission failed');
       setSubmitting(false);

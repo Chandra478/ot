@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('test_id')->constrained();
             $table->integer('score');
+            $table->integer('total_questions');
+            $table->json('answers');
             $table->dateTime('submitted_at');
             $table->timestamps();
         });

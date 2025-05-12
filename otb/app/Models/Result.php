@@ -14,9 +14,12 @@ class Result extends Model
         'user_id',
         'test_id',
         'score',
+        'total_questions',
+        'answers',
         'submitted_at',
     ];
     protected $casts = [
+        'answers' => 'array',
         'submitted_at' => 'datetime',
     ];
     public function user()

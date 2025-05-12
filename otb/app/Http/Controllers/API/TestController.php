@@ -122,7 +122,7 @@ class TestController extends Controller
         ]);
     }
 
-    public function submitTest(Request $request, Test $test)
+   public function submitTest(Request $request, Test $test)
 {
     DB::beginTransaction();
 
@@ -130,12 +130,11 @@ class TestController extends Controller
         $student = $request->user();
         $now = Carbon::now();
 
-        // Validate student authorization
+        // Authorization and validation checks
         if ($student->class !== $test->class) {
             return response()->json(['message' => 'Unauthorized for this test'], 403);
         }
 
-        // Validate test availability
         $endTime = Carbon::parse($test->start_time)->addMinutes($test->duration);
         if ($now->gt($endTime)) {
             return response()->json([
@@ -144,31 +143,37 @@ class TestController extends Controller
             ], 403);
         }
 
-        // Prevent multiple submissions
         if ($test->results()->where('user_id', $student->id)->exists()) {
             return response()->json(['message' => 'Test already submitted'], 409);
         }
 
-        // Validate request format
+        // Validate and format answers
         $validated = $request->validate([
             'answers' => 'required|array',
             'answers.*' => 'required|string|max:255'
         ]);
 
+        // Convert answer keys to integers
+        $formattedAnswers = collect($validated['answers'])
+            ->mapWithKeys(function ($answer, $questionId) {
+                return [(int)$questionId => $answer];
+            })
+            ->all();
+
         // Calculate score
         $questions = $test->questions()->pluck('correct_answer', 'id');
-        $score = collect($validated['answers'])
-            ->filter(fn ($answer, $questionId) =>
-                $questions->has($questionId) &&
+        $score = collect($formattedAnswers)
+            ->filter(fn ($answer, $questionId) => 
+                $questions->has($questionId) && 
                 $answer === $questions[$questionId]
             )->count();
 
-        // Store result
+        // Store result with formatted answers
         $result = $student->results()->create([
             'test_id' => $test->id,
             'score' => $score,
             'total_questions' => $questions->count(),
-            'answers' => $validated['answers'],
+            'answers' => $formattedAnswers, // Store formatted answers
             'submitted_at' => $now
         ]);
 
