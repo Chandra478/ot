@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/student/results/{result}', [ResultController::class, 'showResult']);
             Route::get('/student/results', [ResultController::class, 'studentResults']);
              Route::get('/student/profile', [StudentController::class, 'getProfile']);
+              Route::put('/student/profile', [StudentController::class, 'updateProfile']);
         });
 });
 

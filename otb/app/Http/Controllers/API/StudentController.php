@@ -31,11 +31,12 @@ class StudentController extends Controller
         ]);
     }
 
-     public function getProfile(Request $request)
+         public function getProfile(Request $request)
     {
         $student = $request->user();
 
         return response()->json([
+            'id' => $student->id,
             'name' => $student->name,
             'email' => $student->email,
             'class' => $student->class,
@@ -43,6 +44,37 @@ class StudentController extends Controller
             'registration_date' => $student->created_at->format('d M Y'),
             'avatar' => $student->avatar_url // Add this field if you have avatars
         ]);
+    }
+
+
+
+    public function updateProfile(Request $request)
+    {
+        $student = $request->user();
+        $validated = $request->validate([
+            'name' => 'string|max:255',
+            'email' => 'email|unique:users,email,'.$student->id,
+            'gender' => 'in:male,female,other',
+            'class' => 'string',
+            'password' => 'nullable|string|min:8|confirmed',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->has('password') && $request->password != '') {
+            $validated['password'] = bcrypt($request->password);
+        }
+
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = $avatarPath;
+        }
+
+        try {
+            $student->update($validated);
+            return response()->json($student);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     public function getTests(Request $request)

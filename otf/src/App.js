@@ -18,6 +18,7 @@ import TestInfo from './components/TestInfo';
 import TestInterface from './components/TestInterface';
 import ResultPage from './components/ResultPage';
 import StudentResultsList from './components/StudentResultsList';
+import StudentProfile from './components/StudentProfile';
 function ProtectedRoute({ children, role }) {
   const user = JSON.parse(localStorage.getItem('user'));
 
@@ -53,6 +54,7 @@ function App() {
             <Route path="/test/:testId" element={<ProtectedRoute role="student"><TestInterface /></ProtectedRoute>} />
             <Route path="student/results/:resultId" element={<ProtectedRoute role="student"><ResultPage /></ProtectedRoute>} />
             <Route path="student/results/" element={<ProtectedRoute role="student"><StudentResultsList /></ProtectedRoute>} />
+            <Route path="student/profile" element={<ProtectedRoute role="student"><StudentProfile /></ProtectedRoute>} />
           </Route>
         </Route>
       </Routes>
