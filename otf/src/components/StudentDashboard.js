@@ -153,7 +153,7 @@ function StudentDashboard() {
                                 const hasResult = test.results.length > 0;
                                 
                                 return (
-                                    <tr key={test.id} onClick={() => navigate('/student/upcoming-tests')}>
+                                    <tr key={test.id} >
                                         <td>{test.title}</td>
                                         <td>{test.class}</td>
                                         <td>{new Date(test.start_time).toLocaleString()}</td>

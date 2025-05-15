@@ -18,7 +18,7 @@ class StudentController extends Controller
             'stats' => [
                 'total_tests' => Test::where('class', $student->class)->count(),
                 'completed_tests' => $student->results()->count(),
-                'average_score' => $student->results()->avg('score'),
+                'average_score' => number_format($student->results()->avg('score'), 2),
                 'upcoming_tests' => Test::where('class', $student->class)
                     ->where('start_time', '>', now())
                     ->count()
