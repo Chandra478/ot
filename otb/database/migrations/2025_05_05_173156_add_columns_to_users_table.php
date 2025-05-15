@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('role')->default('student');
-            $table->string('gender');
             $table->string('class');
+            $table->string('gender');
+            $table->string('avatar_url')->nullable();
             $table->boolean('is_approved')->default(false);
         });
     }

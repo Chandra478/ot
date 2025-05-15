@@ -47,9 +47,10 @@ function TestManagement() {
                             <td>{formatUTCDate(test.start_time)} </td>
                             <td>{test.duration} minutes</td>
                             <td>
-                                <Badge bg={new Date(test.start_time) > new Date() ? 'warning' : 'success'}>
-                                    {new Date(test.start_time) > new Date() ? 'Upcoming' : 'Active'}
-                                </Badge>
+                               <Badge bg={new Date() < new Date(test.start_time) ? 'warning' : new Date() < new Date(new Date(test.start_time).getTime() + test.duration * 60000) ? 'success' : 'secondary'}>
+  {new Date() < new Date(test.start_time) ? 'Upcoming' : new Date() < new Date(new Date(test.start_time).getTime() + test.duration * 60000) ? 'Active' : 'Completed'}
+</Badge>
+
                             </td>
                             <td>
                                 <Button as={Link} to={`/tests/${test.id}/questions`} variant="info" size="sm">

@@ -31,6 +31,20 @@ class StudentController extends Controller
         ]);
     }
 
+     public function getProfile(Request $request)
+    {
+        $student = $request->user();
+
+        return response()->json([
+            'name' => $student->name,
+            'email' => $student->email,
+            'class' => $student->class,
+            'gender' => $student->gender,
+            'registration_date' => $student->created_at->format('d M Y'),
+            'avatar' => $student->avatar_url // Add this field if you have avatars
+        ]);
+    }
+
     public function getTests(Request $request)
     {
         $student = $request->user();

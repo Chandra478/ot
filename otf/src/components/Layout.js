@@ -1,7 +1,7 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { Container, Navbar, Nav, Button, Offcanvas } from 'react-bootstrap';
 import { useState } from 'react';
-import { FiLogOut, FiMenu, FiHome, FiUsers, FiFileText, FiClock } from 'react-icons/fi';
+import { FiLogOut, FiMenu, FiHome, FiUsers, FiFileText, FiClock, FiUser } from 'react-icons/fi';
 
 const Layout = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -17,7 +17,7 @@ const Layout = () => {
   return (
     <>
       {/* Header/Navbar */}
-      <Navbar bg="dark" variant="dark" expand="lg" className="fixed-top">
+      <Navbar bg="primary" variant="dark" expand="lg" className="fixed-top">
         <Container fluid>
           <Button 
             variant="dark" 
@@ -74,6 +74,9 @@ const Layout = () => {
                   </Nav.Link>
                   <Nav.Link as={Link} to="/student/results" className="mb-2 rounded">
                     <FiFileText className="me-2" /> Results
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/student/profile" className="mb-2 rounded">
+                    <FiUser className="me-2" /> Profile
                   </Nav.Link>
                 </>
               )}

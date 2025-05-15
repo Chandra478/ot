@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Table, Spinner, Alert, Button, Badge } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../config/axios'; // Adjust the import based on your axios setup
 
 function StudentDashboard() {
@@ -8,6 +8,7 @@ function StudentDashboard() {
     const [tests, setTests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,7 +32,6 @@ function StudentDashboard() {
     const getTestStatus = (test) => {
         const now = new Date();
         const start = new Date(test.start_time);
-        console.log(test.start_time,start)
         const end = new Date(start.getTime() + test.duration * 60000);
         
         if (now < start) return 'upcoming';
@@ -114,13 +114,13 @@ function StudentDashboard() {
                         </thead>
                         <tbody>
                             {dashboardData.recent_tests.map(result => (
-                                <tr key={result.id}>
+                                <tr key={result.id} onClick={() => navigate(`/student/results/${result.id}`)}>
                                     <td>{result.test.title}</td>
                                     <td>{new Date(result.submitted_at).toLocaleDateString()}</td>
                                     <td>{result.score}</td>
                                     <td>
-                                        <Badge bg={result.score >= 50 ? 'success' : 'danger'}>
-                                            {result.score >= 50 ? 'Passed' : 'Failed'}
+                                        <Badge bg={(result.score / result.total_questions) * 100 >= 30 ? 'success' : 'danger'}>
+                                            {(result.score / result.total_questions) * 100 >= 30 ? 'Passed' : 'Failed'}
                                         </Badge>
                                     </td>
                                 </tr>
@@ -153,7 +153,7 @@ function StudentDashboard() {
                                 const hasResult = test.results.length > 0;
                                 
                                 return (
-                                    <tr key={test.id}>
+                                    <tr key={test.id} onClick={() => navigate('/student/upcoming-tests')}>
                                         <td>{test.title}</td>
                                         <td>{test.class}</td>
                                         <td>{new Date(test.start_time).toLocaleString()}</td>
