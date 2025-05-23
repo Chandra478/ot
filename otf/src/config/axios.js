@@ -2,6 +2,7 @@ import axios from 'axios';
 
 // Create a function to properly get the API URL
 const getApiBaseUrl = () => {
+  return 'https://puny-symbols-burn.loca.lt';
   // During development
   if (process.env.NODE_ENV === 'development') {
     return process.env.REACT_APP_API_URL || 'http://localhost:8000';
