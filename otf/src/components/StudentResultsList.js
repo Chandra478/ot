@@ -71,6 +71,9 @@ function StudentResultsList() {
                 <Link to={`/student/results/${result.id}`} className="btn btn-sm btn-primary">
                   View
                 </Link>
+                 <Link to={`/student/test-rankings/${result.test_id}/${result.user_id}`} className="btn btn-sm btn-primary">
+                  View Rankings
+                </Link>
               </td>
             </tr>
           ))}

@@ -52,6 +52,8 @@ class ResultController extends Controller
                 'results.id',
                 'tests.title as test_title',
                 'results.score',
+                'results.test_id',
+                'results.user_id',
                 'results.total_questions',
                 'results.submitted_at',
                 DB::raw('ROUND((results.score / results.total_questions) * 100, 2) as percentage')
@@ -64,6 +66,8 @@ class ResultController extends Controller
                 'id' => $result->id,
                 'test_title' => $result->test_title,
                 'score' => $result->score,
+                'test_id' => $result->test_id,  
+                'user_id' => $result->user_id,
                 'total_questions' => $result->total_questions,
                 'percentage' => $result->percentage,
                 'submitted_at' => $result->submitted_at
@@ -71,4 +75,12 @@ class ResultController extends Controller
         }));
     }
     
+      public function getRankings($testId)
+    {
+        $results = Result::where('test_id', $testId)
+            ->orderByDesc('score')
+            ->get(['user_id', 'score']);
+
+        return response()->json($results);
+    }
 }
