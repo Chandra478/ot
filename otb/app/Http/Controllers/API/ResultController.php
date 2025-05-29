@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\Result;
 use App\Models\User;
 use App\Models\Test;
-use Illuminate\Support\Facades\DB;
+
 
 class ResultController extends Controller
 {
-    
+
     public function showResult(Request $request, Result $result)
     {
       if ($result->user_id !== auth()->id()) {
@@ -44,42 +44,43 @@ class ResultController extends Controller
      public function studentResults(Request $request)
     {
         $user = $request->user();
-        
-        $results = DB::table('results')
-            ->join('tests', 'results.test_id', '=', 'tests.id')
-            ->where('results.user_id', $user->id)
-            ->select(
-                'results.id',
-                'tests.title as test_title',
-                'results.score',
-                'results.test_id',
-                'results.user_id',
-                'results.total_questions',
-                'results.submitted_at',
-                DB::raw('ROUND((results.score / results.total_questions) * 100, 2) as percentage')
-            )
-            ->orderBy('results.submitted_at', 'desc')
-            ->get();
+
+        $results = $user->results()
+            ->with('test:id,title')
+            ->select('id', 'test_id', 'user_id', 'score', 'total_questions', 'answers', 'submitted_at')
+            ->orderByDesc('submitted_at')
+            ->get()
+            ->map(function ($result) {
+                $result->percentage = round(($result->score / $result->total_questions) * 100, 2);
+                $result->rank = Result::where('test_id', $result->test_id)
+                    ->where('score', '>', $result->score)
+                    ->count() + 1;
+                return $result;
+            });
 
         return response()->json($results->map(function ($result) {
             return [
                 'id' => $result->id,
-                'test_title' => $result->test_title,
+                'test_title' => $result->test->title,
                 'score' => $result->score,
-                'test_id' => $result->test_id,  
+                'test_id' => $result->test_id,
                 'user_id' => $result->user_id,
                 'total_questions' => $result->total_questions,
+                'answers' => $result->answers,
+                'submitted_at' => $result->submitted_at,
+                'rank' => $result->rank,
                 'percentage' => $result->percentage,
-                'submitted_at' => $result->submitted_at
             ];
         }));
     }
-    
+
       public function getRankings($testId)
     {
-        $results = Result::where('test_id', $testId)
+        $results = Result::with('user')->where('test_id', $testId)
+            ->select('user_id', 'score', 'submitted_at')
             ->orderByDesc('score')
-            ->get(['user_id', 'score']);
+            ->orderBy('submitted_at')
+            ->get();
 
         return response()->json($results);
     }

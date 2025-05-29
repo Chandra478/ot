@@ -60,6 +60,8 @@ class StudentController extends Controller
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        
+
         if ($request->has('password') && $request->password != '') {
             $validated['password'] = bcrypt($request->password);
         }

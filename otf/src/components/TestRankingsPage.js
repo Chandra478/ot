@@ -34,16 +34,16 @@ console.log('testId:', testId);
         <thead>
           <tr>
             <th>Rank</th>
-            <th>Student ID</th>
+            <th>Student Name</th>
             <th>Score</th>
           </tr>
         </thead>
         <tbody>
           {rankings.map((result, index) => (
-            <tr key={result.user_id} className={result.user_id == userId ? 'bg-dark' : ''}>
-              <td> {result.user_id+' '+userId},  ---{index + 1}</td>
-              <td>{result.user_id}</td>
-              <td>{result.score}</td>
+            <tr key={result.user_id} >
+              <td className={result.user_id == userId ? 'bg-success' : ''}> {index + 1}</td>
+              <td className={result.user_id == userId ? 'bg-success' : ''}>{result.user.name}</td>
+              <td className={result.user_id == userId ? 'bg-success' : ''}>{result.score}</td>
             </tr>
           ))}
         </tbody>

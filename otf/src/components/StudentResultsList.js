@@ -39,6 +39,7 @@ function StudentResultsList() {
             <th>Test Title</th>
             <th>Submitted At</th>
             <th>Score</th>
+            <th>Rank</th>
             <th>Percentage</th>
             <th>Actions</th>
           </tr>
@@ -63,15 +64,21 @@ function StudentResultsList() {
               <td>{new Date(result.submitted_at).toLocaleString()}</td>
               <td>{result.score}/{result.total_questions}</td>
               <td>
+                <span className={`badge bg-${result.rank === 1 ? 'success' : result.rank <= 3 ? 'warning' : 'danger'}`}>
+                  {result.rank}
+                </span>
+              </td>
+              <td>
                 <span className={`badge bg-${getScoreColor(result.percentage)}`}>
                   {result.percentage}%
                 </span>
               </td>
               <td>
-                <Link to={`/student/results/${result.id}`} className="btn btn-sm btn-primary">
+                <Link to={`/student/results/${result.id}`} className="btn btn-sm btn-primary ">
                   View
-                </Link>
-                 <Link to={`/student/test-rankings/${result.test_id}/${result.user_id}`} className="btn btn-sm btn-primary">
+                </Link> 
+                {' '}
+                <Link to={`/student/test-rankings/${result.test_id}/${result.user_id}`} className="btn btn-sm btn-primary">
                   View Rankings
                 </Link>
               </td>
