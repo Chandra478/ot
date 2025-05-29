@@ -53,82 +53,99 @@ function Login() {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-      <Row className="w-100">
-        <Col md={{ span: 6, offset: 3 }} lg={{ span: 4, offset: 4 }}>
-          <Card className="shadow">
-            <Card.Body className="p-4">
-              <h2 className="text-center mb-4">Login</h2>
-              
-              {error && (
-                <Alert 
-                  variant="danger" 
-                  className="text-center"
-                  onClose={() => setError('')} 
-                  dismissible
-                >
-                  {error}
-                </Alert>
-              )}
-
-              <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    isInvalid={!!error}
+    <div
+      style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <Container>
+        <Row className="justify-content-center">
+          <Col md={6} lg={4}>
+            <Card className="shadow-lg rounded-4 border-0">
+              <Card.Body className="p-4">
+                <div className="text-center mb-4">
+                  {/* Replace with your logo if available */}
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
+                    alt="Logo"
+                    style={{ width: 60, marginBottom: 10 }}
                   />
-                  <Form.Control.Feedback type="invalid">
-                    Please enter a valid email
-                  </Form.Control.Feedback>
-                </Form.Group>
-
-                <Form.Group className="mb-4">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    isInvalid={!!error}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Password is required
-                  </Form.Control.Feedback>
-                </Form.Group>
-
-                <div className="d-grid mb-3">
-                  <Button variant="primary" type="submit" size="lg">
-                    Login
-                  </Button>
+                  <h2 className="fw-bold" style={{ color: '#2575fc' }}>Login</h2>
                 </div>
+                {error && (
+                  <Alert 
+                    variant="danger" 
+                    className="text-center"
+                    onClose={() => setError('')} 
+                    dismissible
+                  >
+                    {error}
+                  </Alert>
+                )}
 
-                <div className="text-center">
-                  <span className="text-muted">Don't have an account? </span>
-                  <Link to="/register" className="text-decoration-none">
-                    Register here
-                  </Link>
-                </div>
+                <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control
+                      type="email"
+                      placeholder="Enter email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      isInvalid={!!error}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please enter a valid email
+                    </Form.Control.Feedback>
+                  </Form.Group>
 
-                <div className="text-center mt-4">
-                  <Button variant="secondary" onClick={handleAdminClick} className="me-2">
-                    Admin
-                  </Button>
-                  <Button variant="secondary" onClick={handleStudentClick}>
-                    Student
-                  </Button>
-                </div>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+                  <Form.Group className="mb-4">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      isInvalid={!!error}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Password is required
+                    </Form.Control.Feedback>
+                  </Form.Group>
+
+                  <div className="d-grid mb-3">
+                    <Button variant="primary" type="submit" size="lg">
+                      Login
+                    </Button>
+                  </div>
+
+                  <div className="text-center">
+                    <span className="text-muted">Don't have an account? </span>
+                    <Link to="/register" className="text-decoration-none">
+                      Register here
+                    </Link>
+                  </div>
+
+                  <div className="text-center mt-4">
+                    <Button variant="secondary" onClick={handleAdminClick} className="me-2">
+                      Admin
+                    </Button>
+                    <Button variant="secondary" onClick={handleStudentClick}>
+                      Student
+                    </Button>
+                  </div>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 }
 
