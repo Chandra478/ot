@@ -56,7 +56,7 @@ function Login() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #43cea2 0%, #185a9d 100%)',
+        background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
