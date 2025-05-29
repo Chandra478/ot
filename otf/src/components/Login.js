@@ -56,7 +56,7 @@ function Login() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, rgb(102, 153, 255) 0%, rgb(102, 255, 204) 100%)',
+        background: 'linear-gradient(135deg, #43cea2 0%, #185a9d 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -65,16 +65,22 @@ function Login() {
       <Container>
         <Row className="justify-content-center">
           <Col md={6} lg={4}>
-            <Card className="shadow-lg rounded-4 border-0">
+            <Card
+              className="shadow-lg rounded-4 border-0"
+              style={{
+                background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)', // light blue gradient
+                color: '#222'
+              }}
+            >
               <Card.Body className="p-4">
                 <div className="text-center mb-4">
-                  {/* Replace with your logo if available */}
                   <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg"
+                    src="/eexam2.png"
                     alt="Logo"
-                    style={{ width: 60, marginBottom: 10 }}
+                    className="rounded-circle"
+                    style={{ width: 60, height: 60, objectFit: 'cover', marginBottom: 10, border: '2px solid #2575fc' }}
                   />
-                  <h2 className="fw-bold" style={{ color: '#2575fc' }}>Login</h2>
+                  <h2 className="fw-bold" style={{ color: '#185a9d', letterSpacing: 1 }}>Login</h2>
                 </div>
                 {error && (
                   <Alert 
@@ -119,7 +125,16 @@ function Login() {
                   </Form.Group>
 
                   <div className="d-grid mb-3">
-                    <Button variant="primary" type="submit" size="lg">
+                    <Button
+                      style={{
+                        background: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)',
+                        border: 'none',
+                        fontWeight: 'bold',
+                        letterSpacing: 1
+                      }}
+                      type="submit"
+                      size="lg"
+                    >
                       Login
                     </Button>
                   </div>

@@ -151,92 +151,129 @@ function QuestionManagement() {
     if (loading) return <Spinner animation="border" />;
 
     return (
-        <Container className="py-4">
-            {error && <Alert variant="danger">{error}</Alert>}
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>
-                    Questions for: {test?.title}
-                    <Badge bg="secondary" className="ms-2">{test?.class}</Badge>
-                </h2>
-                <div>
-                    <Button variant="primary" onClick={() => {
-                        setCurrentQuestion(null);
-                        setShowModal(true);
-                    }} className="me-2">
-                        Add Question
-                    </Button>
-                    <Button variant="success" onClick={() => setShowGenerateModal(true)}>
-                        Generate Questions
-                    </Button>
+        <div
+            style={{
+                // minHeight: '100vh',
+                // background: 'linear-gradient(135deg, #43cea2 0%, #185a9d 100%)',
+                // padding: '40px 0'
+            }}
+        >
+            <div className="container">
+                <div
+                    className="shadow-lg rounded-4 p-4"
+                    style={{
+                        background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)',
+                        color: '#222',
+                        marginBottom: 32
+                    }}
+                >
+                    {error && <Alert variant="danger">{error}</Alert>}
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h2>
+                            Questions for: {test?.title}
+                            <Badge bg="secondary" className="ms-2">{test?.class}</Badge>
+                        </h2>
+                        <div>
+                            <Button
+                                style={{
+                                    background: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)',
+                                    border: 'none',
+                                    fontWeight: 'bold',
+                                    letterSpacing: 1,
+                                    color: '#fff'
+                                }}
+                                onClick={() => {
+                                    setCurrentQuestion(null);
+                                    setShowModal(true);
+                                }}
+                                className="me-2"
+                            >
+                                Add Question
+                            </Button>
+                            <Button
+                                style={{
+                                    background: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)',
+                                    border: 'none',
+                                    fontWeight: 'bold',
+                                    letterSpacing: 1,
+                                    color: '#fff'
+                                }}
+                                onClick={() => setShowGenerateModal(true)}
+                            >
+                                Generate Questions
+                            </Button>
+                        </div>
+                    </div>
+
+                    <Table striped bordered hover responsive>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Question</th>
+                                <th>Options</th>
+                                <th>Correct Answer</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {questions.map((q, index) => (
+                                <tr key={q.id}>
+                                    <td>{index + 1}</td>
+                                    <td>{q.question}</td>
+                                    <td>
+                                        <ol>
+                                            {q.options.map((opt, i) => (
+                                                <li key={i}>{opt}</li>
+                                            ))}
+                                        </ol>
+                                    </td>
+                                    <td>{q.correct_answer}</td>
+                                    <td>
+                                        <Button
+                                            variant="info"
+                                            size="sm"
+                                            onClick={() => {
+                                                setCurrentQuestion(q);
+                                                setShowModal(true);
+                                            }}
+                                            className="me-2"
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            variant="danger"
+                                            size="sm"
+                                            onClick={() => handleDelete(q.id)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    <nav aria-label="Page navigation example">
+                        <ul className="pagination">
+                            <li className="page-item">
+                                <Button variant="light" onClick={goToPrevPage} disabled={!pagination.prev_page_url}>
+                                    Previous
+                                </Button>
+                            </li>
+                            <li className="page-item active">
+                                <span className="page-link">
+                                    Page {pagination.current_page}
+                                </span>
+                            </li>
+                            <li className="page-item">
+                                <Button variant="light" onClick={goToNextPage} disabled={!pagination.next_page_url}>
+                                    Next
+                                </Button>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
 
-            <Table striped bordered hover responsive>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Question</th>
-                        <th>Options</th>
-                        <th>Correct Answer</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {questions.map((q, index) => (
-                        <tr key={q.id}>
-                            <td>{index + 1}</td>
-                            <td>{q.question}</td>
-                            <td>
-                                <ol>
-                                    {q.options.map((opt, i) => (
-                                        <li key={i}>{opt}</li>
-                                    ))}
-                                </ol>
-                            </td>
-                            <td>{q.correct_answer}</td>
-                            <td>
-                                <Button
-                                    variant="info"
-                                    size="sm"
-                                    onClick={() => {
-                                        setCurrentQuestion(q);
-                                        setShowModal(true);
-                                    }}
-                                    className="me-2"
-                                >
-                                    Edit
-                                </Button>
-                                <Button
-                                    variant="danger"
-                                    size="sm"
-                                    onClick={() => handleDelete(q.id)}
-                                >
-                                    Delete
-                                </Button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
-            <nav aria-label="Page navigation example">
-                <ul className="pagination">
-                    <li className="page-item">
-                        <Button variant="light" onClick={goToPrevPage} disabled={!pagination.prev_page_url}>
-                            Previous
-                        </Button>
-                    </li>
-                    <li className="page-item active">
-                        <span className="page-link">
-                            Page {pagination.current_page}
-                        </span>
-                    </li>
-                    <li className="page-item">
-                        <Button variant="light" onClick={goToNextPage} disabled={!pagination.next_page_url}>
-                            Next
-                        </Button>
-                    </li>
-                </ul>
-            </nav>
             {/* Add/Edit Question Modal */}
             <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
                 <Modal.Header closeButton>
@@ -290,7 +327,16 @@ function QuestionManagement() {
                             </Form.Select>
                         </Form.Group>
 
-                        <Button type="submit" variant="primary">
+                        <Button
+                            type="submit"
+                            style={{
+                                background: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)',
+                                border: 'none',
+                                fontWeight: 'bold',
+                                letterSpacing: 1,
+                                color: '#fff'
+                            }}
+                        >
                             {currentQuestion ? 'Update' : 'Save'}
                         </Button>
                     </Form>
@@ -324,13 +370,23 @@ function QuestionManagement() {
                                 required
                             />
                         </Form.Group>
-                        <Button variant="success" onClick={handleGenerate} disabled={generating}>
+                        <Button
+                            style={{
+                                background: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)',
+                                border: 'none',
+                                fontWeight: 'bold',
+                                letterSpacing: 1,
+                                color: '#fff'
+                            }}
+                            onClick={handleGenerate}
+                            disabled={generating}
+                        >
                             {generating ? <Spinner animation="border" size="sm" /> : 'Generate'}
                         </Button>
                     </Form>
                 </Modal.Body>
             </Modal>
-        </Container>
+        </div>
     );
 }
 

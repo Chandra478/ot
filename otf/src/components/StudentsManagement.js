@@ -115,122 +115,145 @@ function StudentsManagement() {
     };
 
     return (
-        <div className="p-4">
-            <div className="d-flex justify-content-between mb-4">
-                <h2>Manage Students</h2>
-                <Button onClick={() => {
-                    setCurrentStudent(null);
-                    setFormData({
-                        name: '',
-                        email: '',
-                        gender: 'male',
-                        class: 'Class 1',
-                        password: ''
-                    });
-                    setShowModal(true);
-                }}>
-                    Add New Student
-                </Button>
-            </div>
-
-            <div className="mb-4 d-flex gap-3">
-                <Form.Select 
-                    style={{ width: '200px' }}
-                    value={selectedClass}
-                    onChange={(e) => setSelectedClass(e.target.value)}
-                >
-                    <option value="all">All Classes</option>
-                    {classes.map(cls => (
-                        <option key={cls} value={cls}>{cls}</option>
-                    ))}
-                </Form.Select>
+        <div
+            style={{
                 
-                <InputGroup style={{ width: '300px' }}>
-                    <Form.Control
-                        placeholder="Search students..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <Button variant="outline-secondary" onClick={fetchData}>
-                        Search
-                    </Button>
-                </InputGroup>
+                // minHeight: '100vh',
+                // background: 'linear-gradient(135deg, #43cea2 0%, #185a9d 100%)',
+                // padding: '40px 0'
+            }}
+        >
+            <div className="container">
+                <div
+                    className="shadow-lg rounded-4 p-4"
+                    style={{
+                        background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)',
+                        color: '#222',
+                        marginBottom: 32
+                    }}
+                >
+                    <div className="d-flex justify-content-between mb-4">
+                        <h2>Manage Students</h2>
+                        <Button
+                            style={{
+                                background: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)',
+                                border: 'none',
+                                fontWeight: 'bold',
+                                letterSpacing: 1
+                            }}
+                            onClick={() => {
+                                setCurrentStudent(null);
+                                setFormData({
+                                    name: '',
+                                    email: '',
+                                    gender: 'male',
+                                    class: 'Class 1',
+                                    password: ''
+                                });
+                                setShowModal(true);
+                            }}
+                        >
+                            Add New Student
+                        </Button>
+                    </div>
+
+                    <div className="mb-4 d-flex gap-3">
+                        <Form.Select 
+                            style={{ width: '200px' }}
+                            value={selectedClass}
+                            onChange={(e) => setSelectedClass(e.target.value)}
+                        >
+                            <option value="all">All Classes</option>
+                            {classes.map(cls => (
+                                <option key={cls} value={cls}>{cls}</option>
+                            ))}
+                        </Form.Select>
+                        
+                        <InputGroup style={{ width: '300px' }}>
+                            <Form.Control
+                                placeholder="Search students..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+                            <Button variant="outline-secondary" onClick={fetchData}>
+                                Search
+                            </Button>
+                        </InputGroup>
+                    </div>
+
+                    {error && <Alert variant="danger">{error}</Alert>}
+
+                    {loading ? (
+                        <Spinner animation="border" />
+                    ) : (
+                        <Table striped bordered hover responsive>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Class</th>
+                                    <th>Gender</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {students.map(student => (
+                                    <tr key={student.id}>
+                                        <td>{student.name}</td>
+                                        <td>{student.email}</td>
+                                        <td>{student.class}</td>
+                                        <td>
+                                            <Badge bg="info">{student.gender.charAt(0).toUpperCase() + student.gender.slice(1)}</Badge>
+                                        </td>
+                                        <td>
+                                            <Button 
+                                                variant="warning"
+                                                className="me-2"
+                                                onClick={() => {
+                                                    setCurrentStudent(student);
+                                                    setFormData({
+                                                        name: student.name,
+                                                        email: student.email,
+                                                        gender: student.gender,
+                                                        class: student.class,
+                                                        password: ''
+                                                    });
+                                                    setShowModal(true);
+                                                }}
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button 
+                                                variant="danger"
+                                                onClick={() => handleDelete(student.id)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    )}
+                    <nav aria-label="Page navigation example">
+                        <ul className="pagination">
+                            <li className={`page-item ${!pagination.prev_page_url ? 'disabled' : ''}`}>
+                                <Button className="page-link" onClick={goToPrevPage}>Previous</Button>
+                            </li>
+                            {[...Array(pagination.last_page)].map((_, i) => (
+                                <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
+                                    <Button className="page-link" onClick={() => setCurrentPage(i + 1)}>{i + 1}</Button>
+                                </li>
+                            ))}
+                            <li className={`page-item ${!pagination.next_page_url ? 'disabled' : ''}`}>
+                                <Button className="page-link" onClick={goToNextPage}>Next</Button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
 
-            {error && <Alert variant="danger">{error}</Alert>}
-
-            {loading ? (
-                <Spinner animation="border" />
-            ) : (
-                <Table striped bordered hover responsive>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Class</th>
-                            <th>Gender</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students.map(student => (
-                            <tr key={student.id}>
-                                <td>{student.name}</td>
-                                <td>{student.email}</td>
-                                <td>{student.class}</td>
-                                <td>
-                                    <Badge bg="info">{student.gender.charAt(0).toUpperCase() + student.gender.slice(1)}</Badge>
-                                </td>
-                                <td>
-                                    <Button 
-                                        variant="warning"
-                                        className="me-2"
-                                        onClick={() => {
-                                            setCurrentStudent(student);
-                                            setFormData({
-                                                name: student.name,
-                                                email: student.email,
-                                                gender: student.gender,
-                                                class: student.class,
-                                                password: ''
-                                            });
-                                            setShowModal(true);
-                                        }}
-                                    >
-                                        Edit
-                                    </Button>
-                                    <Button 
-                                        variant="danger"
-                                        onClick={() => handleDelete(student.id)}
-                                    >
-                                        Delete
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            )}
-                <nav aria-label="Page navigation example">
-                    <ul className="pagination">
-                        <li className="page-item">
-                            <Button variant="light" onClick={goToPrevPage} disabled={!pagination.prev_page_url}>
-                                Previous
-                            </Button>
-                        </li>
-                        <li className="page-item active">
-                            <span className="page-link">
-                                Page {pagination.current_page}
-                            </span>
-                        </li>
-                        <li className="page-item">
-                            <Button variant="light" onClick={goToNextPage} disabled={!pagination.next_page_url}>
-                                Next
-                            </Button>
-                        </li>
-                    </ul>
-                </nav>      
-            {/* Add/Edit Modal */}
+            {/* Modal */}
             <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
                 <Modal.Header closeButton>
                     <Modal.Title>{currentStudent ? 'Edit Student' : 'Add New Student'}</Modal.Title>
@@ -312,7 +335,15 @@ function StudentsManagement() {
                             )}
                         </Form.Group>
 
-                        <Button variant="primary" type="submit">
+                        <Button
+                            style={{
+                                background: 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)',
+                                border: 'none',
+                                fontWeight: 'bold',
+                                letterSpacing: 1
+                            }}
+                            type="submit"
+                        >
                             {currentStudent ? 'Update' : 'Create'}
                         </Button>
                     </Form>
