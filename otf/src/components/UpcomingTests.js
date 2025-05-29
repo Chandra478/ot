@@ -60,58 +60,67 @@ function UpcomingTests() {
     }
 
     return (
-        <Container className="py-4">
-            <h2 className="mb-4">Upcoming Tests</h2>
-            
-            <Table striped bordered hover responsive>
-                <thead>
-                    <tr>
-                        <th>Test Name</th>
-                        <th>Class</th>
-                        <th>Start Time</th>
-                        <th>Duration</th>
-                        <th>Time Remaining</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tests.map(test => {
-                        const timeRemaining = calculateTimeRemaining(test.start_time);
-                        const isTestSoon = new Date(test.start_time) - currentTime < 3600000; // 1 hour
+        <div className="container">
+            <div
+                className="shadow-lg rounded-4 p-4"
+                style={{
+                    background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)',
+                    color: '#222',
+                    marginBottom: 32
+                }}
+            >
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Upcoming Tests</h2>
+                </div>
+                <Table striped bordered hover responsive>
+                    <thead>
+                        <tr>
+                            <th>Test Name</th>
+                            <th>Class</th>
+                            <th>Start Time</th>
+                            <th>Duration</th>
+                            <th>Time Remaining</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tests.map(test => {
+                            const timeRemaining = calculateTimeRemaining(test.start_time);
+                            const isTestSoon = new Date(test.start_time) - currentTime < 3600000; // 1 hour
 
-                        return (
-                            <tr key={test.id}>
-                                <td>{test.title}</td>
-                                <td>{test.class}</td>
-                                <td>{new Date(test.start_time).toLocaleString()}</td>
-                                <td>{test.duration} minutes</td>
-                                <td>
-                                    <Badge bg={isTestSoon ? 'warning' : 'primary'}>
-                                        {timeRemaining}
-                                    </Badge>
-                                </td>
-                                <td>
-                                    <Button 
-                                        variant="info" 
-                                        size="sm"
-                                        as={Link}
-                                        to={`/test-info/${test.id}`}
-                                    >
-                                        View Details
-                                    </Button>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </Table>
-
-            {tests.length === 0 && (
-                <Alert variant="info" className="mt-4">
-                    No upcoming tests found
-                </Alert>
-            )}
-        </Container>
+                            return (
+                                <tr key={test.id}>
+                                    <td>{test.title}</td>
+                                    <td>{test.class}</td>
+                                    <td>{new Date(test.start_time).toLocaleString()}</td>
+                                    <td>{test.duration} minutes</td>
+                                    <td>
+                                        <Badge bg={isTestSoon ? 'warning' : 'primary'}>
+                                            {timeRemaining}
+                                        </Badge>
+                                    </td>
+                                    <td>
+                                        <Button 
+                                            variant="info" 
+                                            size="sm"
+                                            as={Link}
+                                            to={`/test-info/${test.id}`}
+                                        >
+                                            View Details
+                                        </Button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </Table>
+                {tests.length === 0 && (
+                    <Alert variant="info" className="mt-4">
+                        No upcoming tests found
+                    </Alert>
+                )}
+            </div>
+        </div>
     );
 }
 

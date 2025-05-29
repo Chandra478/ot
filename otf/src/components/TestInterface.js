@@ -112,72 +112,87 @@ function TestInterface() {
   }
 
   return (
-    <Container className="py-4">
-      <Card className="shadow-lg">
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <h2>{test.title}</h2>
+    <div className="container ">
+      <div
+        className="shadow-lg rounded-4 p-4"
+        style={{
+          background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)',
+          color: '#222',
+          marginBottom: 32,
+          // maxWidth: 900,
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }}
+      >
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="mb-0">{test.title}</h2>
           <Badge bg="danger" className="fs-6">
             Time Left: {formatTime(timeLeft)}
           </Badge>
-        </Card.Header>
+        </div>
 
-        <Card.Body>
-          <ProgressBar 
-            now={(timeLeft / (test.duration * 60)) * 100}
-            variant="warning"
-            animated
-            className="mb-4"
-          />
+        <ProgressBar 
+          now={(timeLeft / (test.duration * 60)) * 100}
+          variant="warning"
+          animated
+          className="mb-4"
+        />
 
-          <Form>
-            {test.questions.map((question, index) => (
-              <Card key={question.id} className="mb-4">
-                <Card.Header>Question {index + 1}</Card.Header>
-                <Card.Body>
-                  <p className="fs-5 mb-3">{question.question}</p>
-                  <div className="ms-4">
-                    {question.options.map((option, i) => (
-                      <Form.Check
-                        key={i}
-                        type="radio"
-                        id={`q-${question.id}-${i}`}
-                        name={`question-${question.id}`}
-                        label={option}
-                        checked={answers[question.id] === option}
-                        onChange={() => handleAnswer(question.id, option)}
-                        disabled={submitting}
-                        className="mb-2"
-                      />
-                    ))}
-                  </div>
-                </Card.Body>
-              </Card>
-            ))}
-          </Form>
-
-          <div className="d-grid mt-4">
-            <Button
-              size="lg"
-              variant={submitting ? 'secondary' : 'primary'}
-              onClick={handleSubmit}
-              disabled={submitting || timeLeft <= 0}
-            >
-              {submitting ? (
-                <>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    className="me-2"
+        <Form>
+          {test.questions.map((question, index) => (
+            <div key={question.id} className="mb-4">
+              <div className="fw-bold mb-2">Question {index + 1}</div>
+              <div className="fs-5 mb-3">{question.question}</div>
+              <div className="ms-4">
+                {question.options.map((option, i) => (
+                  <Form.Check
+                    key={i}
+                    type="radio"
+                    id={`q-${question.id}-${i}`}
+                    name={`question-${question.id}`}
+                    label={option}
+                    checked={answers[question.id] === option}
+                    onChange={() => handleAnswer(question.id, option)}
+                    disabled={submitting}
+                    className="mb-2"
                   />
-                  Submitting...
-                </>
-              ) : 'Submit Test'}
-            </Button>
-          </div>
-        </Card.Body>
-      </Card>
-    </Container>
+                ))}
+              </div>
+            </div>
+          ))}
+        </Form>
+
+        <div className="d-grid mt-4">
+          <Button
+            size="lg"
+            onClick={handleSubmit}
+            disabled={submitting || timeLeft <= 0}
+            style={{
+              background: submitting
+                ? undefined
+                : 'linear-gradient(90deg, #43cea2 0%, #185a9d 100%)',
+              border: 'none',
+              fontWeight: 'bold',
+              letterSpacing: 1,
+              color: '#fff'
+            }}
+            variant={submitting ? 'secondary' : undefined}
+          >
+            {submitting ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  className="me-2"
+                />
+                Submitting...
+              </>
+            ) : 'Submit Test'}
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
 

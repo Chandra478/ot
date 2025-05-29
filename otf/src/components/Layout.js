@@ -51,7 +51,7 @@ const Layout = () => {
             Online Test System
           </Navbar.Brand>
           <div className="d-flex align-items-center">
-            <span className="text-light me-3">Welcome, {user?.name}</span>
+            <span className=" me-3" style={{ color: '#fff' }}>Welcome, {user?.name}</span>
             <Button variant="outline-light" onClick={handleLogout}>
               <FiLogOut className="me-2" /> Logout
             </Button>

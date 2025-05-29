@@ -96,9 +96,9 @@ function StudentProfile() {
     };
 
     return (
-        <div className="p-4" style={{  margin: '0 auto' }}>
+        <div className="" style={{}}>
             <Toaster />
-            <Card className="border-0 shadow-sm">
+            <Card className="border-0 shadow-lg rounded-4" style={{ background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)', color: '#185a9d' }}>
                 {loading && (
                     <div className="text-center p-4">
                         <Spinner animation="border" />
@@ -113,7 +113,7 @@ function StudentProfile() {
 
                 {!loading && !error && profile && (
                     <>
-                        <Card.Header className="bg-secondary text-white">
+                        <Card.Header className="bg-transparent border-0">
                             <div className="d-flex align-items-center gap-3">
                                 <div className="profile-avatar">
                                     {!isEditing && (profile.avatar ? (
@@ -122,9 +122,10 @@ function StudentProfile() {
                                             roundedCircle
                                             width={100}
                                             height={100}
+                                            style={{ border: '3px solid #43cea2', background: '#fff' }}
                                         />
                                     ) : (
-                                        <div className="avatar-placeholder">
+                                        <div className="avatar-placeholder" style={{ border: '3px solid #43cea2', color: '#185a9d' }}>
                                             {profile.name[0]}
                                         </div>
                                     ))}
@@ -227,13 +228,14 @@ function StudentProfile() {
                                         <div className="d-flex gap-2">
                                             <Button
                                                 type="submit"
-                                                variant="success"
+                                                className="custom-btn"
                                                 disabled={loading}
                                             >
                                                 {loading ? 'Updating...' : 'Update Profile'}
                                             </Button>
                                             <Button
-                                                variant="secondary"
+                                                className="custom-btn"
+                                                style={{ background: 'linear-gradient(90deg, #185a9d 0%, #43cea2 100%)' }}
                                                 onClick={() => setIsEditing(false)}
                                             >
                                                 Cancel
@@ -243,7 +245,7 @@ function StudentProfile() {
                                 ) : (
                                     <div>
                                         <h3 className="mb-2">{profile.name}</h3>
-                                        <Badge bg="info" className="mb-2">
+                                        <Badge bg="info" className="mb-2 custom-badge">
                                             Class {profile.class}
                                         </Badge>
                                         <div className="text-light small">
@@ -252,7 +254,7 @@ function StudentProfile() {
                                         </div>
                                         <Button
                                             variant="light"
-                                            className="mt-3"
+                                            className="mt-3 custom-btn"
                                             onClick={() => setIsEditing(true)}
                                         >
                                             Edit Profile
@@ -267,7 +269,7 @@ function StudentProfile() {
 
             <style>{`
                 .profile-avatar {
-                    border: 3px solid #fff;
+                    border: 3px solid #43cea2;
                     border-radius: 50%;
                     overflow: hidden;
                     flex-shrink: 0;
@@ -277,12 +279,33 @@ function StudentProfile() {
                     height: 100px;
                     border-radius: 50%;
                     background: #fff;
-                    color: #0d6efd;
+                    color: #185a9d;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     font-size: 36px;
                     font-weight: bold;
+                    border: 3px solid #43cea2;
+                }
+                .custom-badge {
+                    background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+                    color: #fff !important;
+                    border-radius: 12px;
+                    font-weight: 600;
+                    padding: 0.5em 1em;
+                }
+                .custom-btn {
+                    background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+                    color: #fff !important;
+                    border: none;
+                    font-weight: bold;
+                }
+                .custom-btn:active, .custom-btn:focus, .custom-btn:hover {
+                    background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+                    color: #fff !important;
+                }
+                .card, .card-body, .card-header, .form-label, .form-control, .form-select, .text-light, .text-white, .btn-link {
+                    color: #185a9d !important;
                 }
             `}</style>
         </div>

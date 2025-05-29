@@ -89,79 +89,87 @@ function TestInfo() {
   const isTestCompleted = currentUTCTime > testEndTime.toISOString();
 
   return (
-    <Container className="py-4">
-      <Card className="shadow-sm">
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <h2>{test.title}</h2>
-          <Badge bg="info" className="fs-6">
+    <div className="container py-4">
+      <div
+        className="shadow-lg rounded-4 p-4"
+        style={{
+          background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)',
+          color: '#222',
+          marginBottom: 32,
+          // maxWidth: 700,
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }}
+      >
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="mb-0">{test.title}</h2>
+          <Badge bg="info" className="fs-6" style={{ color: '#fff' }}>
             {test.class}
           </Badge>
-        </Card.Header>
+        </div>
 
-        <Card.Body>
-          {/* Test Status Alert */}
-          {hasAttempted ? (
-            <Alert variant="success" className="d-flex align-items-center gap-2">
-              You've already completed this test
-            </Alert>
-          ) : isTestCompleted ? (
-            <Alert variant="danger" className="d-flex align-items-center gap-2">
-              This test has ended
-            </Alert>
-          ) : (
-            <Alert variant={isTestActive ? 'success' : 'warning'} className="d-flex align-items-center gap-2">
-              {isTestActive ? (
-                <>
-                  Test is active! Time remaining: {getUTCTimeRemaining(timeRemaining)}
-                </>
-              ) : (
-                <>
-                  Test starts in: {getUTCTimeRemaining(timeRemaining)}
-                </>
-              )}
-            </Alert>
-          )}
-
-          {/* Test Details */}
-          <ListGroup variant="flush" className="mb-4">
-            <ListGroup.Item>
-              <strong>Start Time:</strong> {formatUTCDate(test.start_time)}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <strong>Duration:</strong> {test.duration} minutes
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <strong>Total Questions:</strong> {test.questions?.length}
-            </ListGroup.Item>
-            {test.description && (
-              <ListGroup.Item>
-                <strong>Description:</strong> {test.description}
-              </ListGroup.Item>
+        {/* Test Status Alert */}
+        {hasAttempted ? (
+          <Alert variant="success" className="d-flex align-items-center gap-2">
+            You've already completed this test
+          </Alert>
+        ) : isTestCompleted ? (
+          <Alert variant="danger" className="d-flex align-items-center gap-2">
+            This test has ended
+          </Alert>
+        ) : (
+          <Alert variant={isTestActive ? 'success' : 'warning'} className="d-flex align-items-center gap-2">
+            {isTestActive ? (
+              <>
+                Test is active! Time remaining: {getUTCTimeRemaining(timeRemaining)}
+              </>
+            ) : (
+              <>
+                Test starts in: {getUTCTimeRemaining(timeRemaining)}
+              </>
             )}
-          </ListGroup>
+          </Alert>
+        )}
 
-          {/* Start Test Button */}
-          {!hasAttempted && isTestActive && !isTestCompleted && (
-            <div className="d-grid">
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={handleStartTest}
-              >
-                Start Test Now
-              </Button>
-            </div>
+        {/* Test Details */}
+        <ListGroup variant="flush" className="mb-4">
+          <ListGroup.Item>
+            <strong>Start Time:</strong> {formatUTCDate(test.start_time)}
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <strong>Duration:</strong> {test.duration} minutes
+          </ListGroup.Item>
+          <ListGroup.Item>
+            <strong>Total Questions:</strong> {test.questions?.length}
+          </ListGroup.Item>
+          {test.description && (
+            <ListGroup.Item>
+              <strong>Description:</strong> {test.description}
+            </ListGroup.Item>
           )}
+        </ListGroup>
 
-          {/* Completed Test Message */}
-          {isTestCompleted && (
-            <Alert variant="info" className="mt-4">
-              Test ended at {formatUTCDate(testEndTime)}
-            </Alert>
-          )}
-        </Card.Body>
-      </Card>
-    </Container>
+        {/* Start Test Button */}
+        {!hasAttempted && isTestActive && !isTestCompleted && (
+          <div className="d-grid">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={handleStartTest}
+            >
+              Start Test Now
+            </Button>
+          </div>
+        )}
+
+        {/* Completed Test Message */}
+        {isTestCompleted && (
+          <Alert variant="info" className="mt-4">
+            Test ended at {formatUTCDate(testEndTime)}
+          </Alert>
+        )}
+      </div>
+    </div>
   );
 }
 

@@ -56,67 +56,75 @@ function ResultPage() {
   }
 
   return (
-    <Container className="py-4">
-      <Card className="shadow-sm">
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <h2>{resultData.test.title} Result</h2>
+    <div className="container ">
+      <div
+        className="shadow-lg rounded-4 p-4"
+        style={{
+          background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)',
+          color: '#222',
+          marginBottom: 32,
+          // maxWidth: 900,
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }}
+      >
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="mb-0">{resultData.test.title} Result</h2>
           <Badge bg="info">{resultData.test.class}</Badge>
-        </Card.Header>
+        </div>
 
-        <Card.Body>
-          {/* Result Summary */}
-          <div className="mb-4 text-center">
-            <h3 className="text-success">
-              Score: {resultData.result.score}/{resultData.result.total_questions}
-            </h3>
-            <h4 className="text-muted">
-              ({resultData.result.percentage}%)
-            </h4>
-            <p className="text-muted">
-              Submitted at: {formatUTCDate(resultData.result.submitted_at)}
-            </p>
-          </div>
+        {/* Result Summary */}
+        <div className="mb-4 text-center">
+          <h3 className="text-success">
+            Score: {resultData.result.score}/{resultData.result.total_questions}
+          </h3>
+          <h4 className="text-muted">
+            ({resultData.result.percentage}%)
+          </h4>
+          <p className="text-muted">
+            Submitted at: {formatUTCDate(resultData.result.submitted_at)}
+          </p>
+        </div>
 
-          {/* Questions Review */}
-          <ListGroup variant="flush">
-            {resultData.questions.map((question, index) => (
-              <ListGroup.Item key={index} className="mb-3">
-                <div className="d-flex justify-content-between mb-2">
-                  <h5>Question {index + 1}</h5>
-                  <Badge 
-                    bg={question.student_answer === question.correct_answer ? 'success' : 'danger'}
+        {/* Questions Review */}
+        <ListGroup variant="flush">
+          {resultData.questions.map((question, index) => (
+            <ListGroup.Item key={index} className="mb-3">
+              <div className="d-flex justify-content-between mb-2">
+                <h5>Question {index + 1}</h5>
+                <Badge 
+                  bg={question.student_answer === question.correct_answer ? 'success' : 'danger'}
+                >
+                  {question.student_answer === question.correct_answer ? 'Correct' : 'Incorrect'}
+                </Badge>
+              </div>
+              
+              <p className="fs-5 mb-3">{question.question}</p>
+              
+              <div className="ms-4">
+                {question.options.map((option, i) => (
+                  <div 
+                    key={i}
+                    className={`p-2 mb-2 rounded ${
+                      option === question.correct_answer ? 'bg-success text-white' :
+                      option === question.student_answer ? 'bg-danger text-white' : ''
+                    }`}
                   >
-                    {question.student_answer === question.correct_answer ? 'Correct' : 'Incorrect'}
-                  </Badge>
-                </div>
-                
-                <p className="fs-5 mb-3">{question.question}</p>
-                
-                <div className="ms-4">
-                  {question.options.map((option, i) => (
-                    <div 
-                      key={i}
-                      className={`p-2 mb-2 rounded ${
-                        option === question.correct_answer ? 'bg-success' :
-                        option === question.student_answer ? 'bg-danger' : ''
-                      }`}
-                    >
-                      {option}
-                      {option === question.correct_answer && (
-                        <span className="ms-2 text-success">✓ Correct Answer</span>
-                      )}
-                      {option === question.student_answer && option !== question.correct_answer && (
-                        <span className="ms-2 text-danger">✗ Your Answer</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Card.Body>
-      </Card>
-    </Container>
+                    {option}
+                    {option === question.correct_answer && (
+                      <span className="ms-2 text-success">✓ Correct Answer</span>
+                    )}
+                    {option === question.student_answer && option !== question.correct_answer && (
+                      <span className="ms-2 text-danger">✗ Your Answer</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      </div>
+    </div>
   );
 }
 
