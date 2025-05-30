@@ -1,7 +1,7 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { Container, Navbar, Nav, Button, Offcanvas } from 'react-bootstrap';
 import { useState } from 'react';
-import { FiLogOut, FiMenu, FiHome, FiUsers, FiFileText, FiClock, FiUser } from 'react-icons/fi';
+import { FiLogOut, FiMenu, FiHome, FiUsers, FiFileText, FiClock, FiUser , FiCompass,FiLock} from 'react-icons/fi';
 
 const Layout = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -91,6 +91,9 @@ const Layout = () => {
                   </Nav.Link>
                   <Nav.Link as={Link} to="/admin/students" className="mb-2 rounded sidebar-link">
                     <FiUsers className="me-2" /> Manage Students
+                  </Nav.Link>
+                   <Nav.Link as={Link} to="/admin/students" className="mb-2 rounded sidebar-link">
+                    <FiLock className="me-2" /> Change Password
                   </Nav.Link>
                 </>
               ) : (

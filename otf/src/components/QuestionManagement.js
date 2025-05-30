@@ -200,7 +200,7 @@ function QuestionManagement() {
                                 }}
                                 onClick={() => setShowGenerateModal(true)}
                             >
-                                Generate Questions
+                                Generate Questions (with AI)
                             </Button>
                         </div>
                     </div>
@@ -346,7 +346,7 @@ function QuestionManagement() {
             {/* Generate Questions Modal */}
             <Modal show={showGenerateModal} onHide={() => setShowGenerateModal(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Generate Questions</Modal.Title>
+                    <Modal.Title>Generate Questions with AI</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
