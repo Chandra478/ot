@@ -361,14 +361,16 @@ function QuestionManagement() {
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Number of Questions</Form.Label>
-                            <Form.Control
-                                type="text"
-                                min="1"
-                                max="20"
+                            <Form.Select
                                 value={difficulty}
                                 onChange={(e) => setDifficulty(e.target.value)}
                                 required
-                            />
+                            >
+                                <option value="">Select difficulty</option>
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                            </Form.Select>
                         </Form.Group>
                         <Button
                             style={{
