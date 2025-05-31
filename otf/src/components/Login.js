@@ -146,14 +146,14 @@ function Login() {
                     </Link>
                   </div>
 
-                  <div className="text-center mt-4">
+                  {/* <div className="text-center mt-4">
                     <Button variant="secondary" onClick={handleAdminClick} className="me-2">
                       Admin
                     </Button>
                     <Button variant="secondary" onClick={handleStudentClick}>
                       Student
                     </Button>
-                  </div>
+                  </div> */}
                 </Form>
               </Card.Body>
             </Card>

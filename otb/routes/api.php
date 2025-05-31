@@ -53,6 +53,11 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('/admin/students/{user}', [AdminController::class, 'updateStudent']);
             Route::delete('/admin/students/{user}', [AdminController::class, 'deleteStudent']);
             Route::get('/admin/classes', [AdminController::class, 'getClasses']);
+            Route::get('/admin/results/{result}', [ResultController::class, 'showResult']);
+
+            Route::get('/admin/results', [ResultController::class, 'allResults']);
+            Route::get('/admin/results/{result}', [ResultController::class, 'adminShowResult']);
+
         });
 
 

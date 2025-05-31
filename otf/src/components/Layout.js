@@ -92,9 +92,12 @@ const Layout = () => {
                   <Nav.Link as={Link} to="/admin/students" className="mb-2 rounded sidebar-link">
                     <FiUsers className="me-2" /> Manage Students
                   </Nav.Link>
-                   <Nav.Link as={Link} to="/admin/students" className="mb-2 rounded sidebar-link">
-                    <FiLock className="me-2" /> Change Password
+                   <Nav.Link as={Link} to="/admin/results" className="mb-2 rounded sidebar-link">
+                    <FiLock className="me-2" /> Results
                   </Nav.Link>
+                    {/* <Nav.Link as={Link} to="/admin/students" className="mb-2 rounded sidebar-link">
+                    <FiLock className="me-2" /> Change Password
+                  </Nav.Link> */}
                 </>
               ) : (
                 <>

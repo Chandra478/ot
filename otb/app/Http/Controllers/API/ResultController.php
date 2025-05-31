@@ -41,6 +41,41 @@ class ResultController extends Controller
     }
 
 
+
+    public function adminShowResult(Request $request, Result $result)
+    {
+        // if (!auth()->user()->is_admin) {
+        //     return response()->json(['message' => 'Unauthorized'], 403);
+        // }
+
+        $result->load(['test.questions', 'user:id,name,class']);
+
+        return response()->json([
+            'result' => [
+                'id' => $result->id,
+                'score' => $result->score,
+                'total_questions' => $result->total_questions,
+                'percentage' => round(($result->score / $result->total_questions) * 100, 2),
+                'submitted_at' => $result->submitted_at->toIso8601String()
+            ],
+            'test' => $result->test->only('id', 'title', 'class'),
+            'questions' => $result->test->questions->map(function($question) use ($result) {
+                return [
+                    'question' => $question->question,
+                    'options' => $question->options,
+                    'correct_answer' => $question->correct_answer,
+                    'student_answer' => $result->answers[$question->id] ?? null // Access with integer key
+                ];
+            }),
+            'user' => [
+                'id' => $result->user->id,
+                'name' => $result->user->name,
+                'class' => $result->user->class
+            ]
+        ]);
+    }
+
+
      public function studentResults(Request $request)
     {
         $user = $request->user();
@@ -83,5 +118,38 @@ class ResultController extends Controller
             ->get();
 
         return response()->json($results);
+    }
+
+
+
+    public function allResults()
+    {
+        $results = Result::with('user:id,name', 'test:id,title')
+            ->select('id', 'test_id', 'user_id', 'score', 'total_questions', 'answers', 'submitted_at')
+            ->orderByDesc('submitted_at')
+            ->get()
+            ->map(function ($result) {
+                $result->percentage = round(($result->score / $result->total_questions) * 100, 2);
+                $result->rank = Result::where('test_id', $result->test_id)
+                    ->where('score', '>', $result->score)
+                    ->count() + 1;
+                return $result;
+            });
+
+        return response()->json($results->map(function ($result) {
+            return [
+                'id' => $result->id,
+                'test_title' => $result->test->title,
+                'score' => $result->score,
+                'test_id' => $result->test_id,
+                'user_name' => $result->user->name,
+                'user_id' => $result->user_id,
+                'total_questions' => $result->total_questions,
+                'answers' => $result->answers,
+                'submitted_at' => $result->submitted_at,
+                'rank' => $result->rank,
+                'percentage' => $result->percentage,
+            ];
+        }));
     }
 }
