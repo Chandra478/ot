@@ -1,0 +1,15 @@
+make option option and correct answer in question table.
+add type in question table
+add type in test
+structure setup in frontend 
+change color of BG hole project 
+remove answer column from result table 
+make result answer table (user_id,test_id,question_id,answer)
+make ai for only question generate with class(course)
+make answer checker automation 
+make email sender apter check test
+change auth sanctum to jwt 
+make result view for theory
+give option for enable and disable student 
+give role option
+give test edit option 
